@@ -17,7 +17,6 @@ import java.time.LocalDateTime
  */
 @ToString
 @Entity
-@EntityListeners(AuditingEntityListener::class)
 @Table(
     indexes = [
         Index(columnList = "createdAt"),
@@ -27,23 +26,10 @@ import java.time.LocalDateTime
 class ArticleComment(
     @ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "article_id") var article: Article,
     @Column(nullable = false, length = 1000) var content: String
-) {
+) : AuditingFields() {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private var id: Long? = null
-
-    @CreatedDate
-    @Column(nullable = false)
-    private var createdAt: LocalDateTime = LocalDateTime.now() //생성일
-    @CreatedBy
-    @Column(nullable = false, length = 100)
-    private var createdBy: String = "" //생성자
-    @LastModifiedDate
-    @Column(nullable = false)
-    private var modifiedAt: LocalDateTime = LocalDateTime.now()//수정일
-    @LastModifiedBy
-    @Column(nullable = false, length = 100)
-    private var modifiedBy: String = ""//수정자
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

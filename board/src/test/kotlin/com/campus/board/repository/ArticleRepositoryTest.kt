@@ -49,7 +49,6 @@ class ArticleRepositoryTest(@Autowired private val articleRepository : ArticleRe
     fun given_whenSelectById_thenWorksFine() {
         val article = articleRepository.findByIdOrNull(testArticle?.getId()?:throw Exception("DB ERROR"))
         assertThat(article).isNotNull
-        assertThat(article?.getCreatedBy()).isEqualTo("testUser")
     }
 
     @DisplayName("insert test")

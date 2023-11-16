@@ -17,7 +17,6 @@ import java.time.LocalDateTime
  * content 본문
  */
 @ToString
-@EntityListeners(AuditingEntityListener::class)
 @Entity
 @Table(
     indexes = [
@@ -31,25 +30,13 @@ class Article(
     @Column(nullable = false, length = 30) var title: String,
     var hashTag: String,
     @Column(nullable = false, length = 2000) var content: String
-) {
+) : AuditingFields() {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private var id: Long? = null
     @Exclude
     @OneToMany(mappedBy = "article", cascade = [CascadeType.ALL])
     private val articleComments: MutableSet<ArticleComment> = linkedSetOf();
-    @CreatedDate
-    @Column(nullable = false)
-    private var createdAt: LocalDateTime = LocalDateTime.now() //생성일
-    @CreatedBy
-    @Column(nullable = false, length = 100)
-    private var createdBy: String = "" //생성자
-    @LastModifiedDate
-    @Column(nullable = false)
-    private var modifiedAt: LocalDateTime = LocalDateTime.now()//수정일
-    @LastModifiedBy
-    @Column(nullable = false, length = 100)
-    private var modifiedBy: String = ""//수정자
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -65,10 +52,6 @@ class Article(
 
     fun getId() : Long? {
         return this.id
-    }
-
-    fun getCreatedBy() : String {
-        return this.createdBy
     }
 
 }
