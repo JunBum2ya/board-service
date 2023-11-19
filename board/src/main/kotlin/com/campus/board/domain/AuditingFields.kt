@@ -27,4 +27,18 @@ open class AuditingFields {
     @LastModifiedBy
     @Column(nullable = false, length = 100)
     private var modifiedBy: String = ""//수정자
+
+    fun getCreatedAt() : LocalDateTime {
+        return this.createdAt
+    }
+    fun getCreatedBy() : String {
+        return this.createdBy
+    }
+    fun getModifiedAt() : LocalDateTime {
+        return this.modifiedAt
+    }
+    fun getModifiedBy() : String {
+        return this.modifiedBy
+    }
+
 }

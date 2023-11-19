@@ -28,7 +28,7 @@ import java.time.LocalDateTime
 )
 class Article(
     @Column(nullable = false, length = 30) var title: String,
-    var hashTag: String,
+    var hashTag: String?,
     @Column(nullable = false, length = 2000) var content: String
 ) : AuditingFields() {
     @Id

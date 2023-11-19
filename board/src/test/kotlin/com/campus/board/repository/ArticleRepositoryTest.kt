@@ -32,9 +32,7 @@ class ArticleRepositoryTest(@Autowired private val articleRepository : ArticleRe
 
     @AfterEach
     fun deleteDefaultArticle() {
-        testArticle?.let {
-            articleRepository.delete(it)
-        }
+        articleRepository.deleteAll()
     }
 
     @DisplayName("select test")
@@ -62,7 +60,7 @@ class ArticleRepositoryTest(@Autowired private val articleRepository : ArticleRe
         assertThat(savedArticle).isEqualTo(article)
     }
 
-    @DisplayName("delete test")
+    @DisplayName("update test")
     @Test
     fun given_whenUpdate_thenWorksFine() {
         val article = articleRepository.findByIdOrNull(testArticle?.getId()?:throw Exception("DB ERROR"))?:throw Exception("1번이 없음")

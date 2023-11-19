@@ -24,12 +24,16 @@ import java.time.LocalDateTime
     ]
 )
 class ArticleComment(
-    @ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "article_id") var article: Article,
+    @ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "article_id") val article: Article,
     @Column(nullable = false, length = 1000) var content: String
 ) : AuditingFields() {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private var id: Long? = null
+
+    fun getId() : Long? {
+        return this.id
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
