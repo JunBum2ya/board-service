@@ -1,6 +1,7 @@
 package com.campus.board.service
 
 import com.campus.board.domain.Article
+import com.campus.board.domain.constant.SearchType
 import com.campus.board.dto.ArticleDto
 import com.campus.board.dto.ArticleSearchParam
 import com.campus.board.exception.CustomException
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.stream.Collectors
 
 @Transactional
 @Service
@@ -21,14 +23,24 @@ class ArticleService(val articleRepository: ArticleRepository) {
      * page 검색
      */
     @Transactional(readOnly = true)
-    fun searchArticles(articleSearchParam: ArticleSearchParam) : Page<ArticleDto> {
-        return Page.empty()
+    fun searchArticles(articleSearchParam: ArticleSearchParam): Page<ArticleDto> {
+        val pageable = articleSearchParam.pageable
+        return articleSearchParam.searchKeyword?.let {
+            when (articleSearchParam.searchType) {
+                SearchType.TITLE -> articleRepository.findArticleByTitleContaining(it, pageable)
+                SearchType.CONTENT -> articleRepository.findArticleByContentContaining(it, pageable)
+                SearchType.ID -> articleRepository.findAll(pageable)
+                SearchType.NICKNAME -> articleRepository.findArticleByCreatedBy(it, pageable)
+                SearchType.HASHTAG -> articleRepository.findArticleByHashTag(it, pageable)
+                SearchType.NONE -> articleRepository.findAll(pageable)
+            }
+        }?.map { ArticleDto.from(it) } ?: articleRepository.findAll(pageable).map { ArticleDto.from(it) }
     }
 
     /**
      * 게시글 추가
      */
-    fun createArticle(articleDto: ArticleDto) : ArticleDto {
+    fun createArticle(articleDto: ArticleDto): ArticleDto {
         val article = articleRepository.save(articleDto.toEntity())
         return ArticleDto.from(article)
     }
@@ -36,16 +48,16 @@ class ArticleService(val articleRepository: ArticleRepository) {
     /**
      * 게시글 수정
      */
-    fun updateArticle(articleId : Long,articleDto: ArticleDto) : ArticleDto {
+    fun updateArticle(articleId: Long, articleDto: ArticleDto): ArticleDto {
         try {
             val article = articleRepository.getReferenceById(articleId)
             article.title = articleDto.title
             article.content = articleDto.content
             article.hashTag = articleDto.hashTag
             return ArticleDto.from(article)
-        }catch (e : EntityNotFoundException) {
-            logger.error("게시글 업데이트 실패. 게시글을 수정하는데 필요한 정보를 찾을 수 없습니다 - {}",e.localizedMessage)
-            throw CustomException(message = e.message?:"")
+        } catch (e: EntityNotFoundException) {
+            logger.error("게시글 업데이트 실패. 게시글을 수정하는데 필요한 정보를 찾을 수 없습니다 - {}", e.localizedMessage)
+            throw CustomException(message = e.message ?: "")
         }
     }
 

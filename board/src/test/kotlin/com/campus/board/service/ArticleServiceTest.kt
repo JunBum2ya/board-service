@@ -2,7 +2,9 @@ package com.campus.board.service
 
 import com.campus.board.domain.Article
 import com.campus.board.dto.ArticleDto
+import com.campus.board.dto.ArticleSearchParam
 import com.campus.board.repository.ArticleRepository
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -13,12 +15,29 @@ import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 
 @DisplayName("비즈니스 로직 - 게시판")
 @ExtendWith(MockitoExtension::class)
 class ArticleServiceTest {
     @InjectMocks lateinit var articleService: ArticleService
     @Mock lateinit var articleRepository: ArticleRepository
+
+    @DisplayName("빈 게시글 검색 파라미터를 입력하면 전체 검색을 한 후 빈 페이지를 반환한다.")
+    @Test
+    fun givenEmptyArticleDto_whenSearchArticles_thenReturnsEmptyArticles() {
+        //given
+        val articleSearchParam = ArticleSearchParam()
+        given(articleRepository.findAll(articleSearchParam.pageable)).willReturn(Page.empty())
+        //when
+        val emptyPage = articleService.searchArticles(articleSearchParam)
+        //then
+        assertThat(emptyPage).isNotNull
+        assertThat(emptyPage.totalPages).isEqualTo(1)
+        assertThat(emptyPage.pageable.isUnpaged).isTrue
+        then(articleRepository).should().findAll(articleSearchParam.pageable)
+    }
 
     @DisplayName("게시글 정보를 입력하면 게시글을 저장한다.")
     @Test
