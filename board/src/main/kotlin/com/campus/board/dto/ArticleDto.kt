@@ -8,6 +8,7 @@ import java.time.LocalDateTime
  * DTO for {@link com.campus.board.domain.Article}
  */
 data class ArticleDto(
+    val id : Long? = null,
     val title: String,
     val hashTag: String? = null,
     val content: String,
@@ -18,6 +19,7 @@ data class ArticleDto(
     companion object {
         fun from(article: Article): ArticleDto {
             return ArticleDto(
+                id = article.getId(),
                 title = article.title,
                 hashTag = article.hashTag,
                 content = article.content,

@@ -27,7 +27,7 @@ class ArticleServiceTest {
         val articleDto = ArticleDto(title = "테스트 게시글", content = "테스트 게시글 내용입니다.")
         given(articleRepository.save(any(Article::class.java))).willReturn(articleDto.toEntity())
         //when
-        articleService.saveArticle(articleDto)
+        articleService.createArticle(articleDto)
         //then
         then(articleRepository).should().save(any(Article::class.java))
     }
@@ -35,12 +35,24 @@ class ArticleServiceTest {
     @Test
     fun givenArticleIdAndModifiedInfo_whenUpdatingArticle_thenUpdateArticle() {
         //given
-        val articleDto = ArticleDto(title = "테스트 게시글", content = "테스트 게시글 내용입니다.")
-        given(articleRepository.save(any(Article::class.java))).willReturn(articleDto.toEntity())
+        val articleDto = ArticleDto(id = 1L,title = "테스트 게시글", content = "테스트 게시글 내용입니다.")
+        given(articleRepository.getReferenceById(articleDto.id?:throw Exception("id 없음"))).willReturn(articleDto.toEntity());
         //when
-        articleService.saveArticle(articleDto)
+        articleService.updateArticle(articleDto.id?:throw Exception("id 없음"),articleDto)
         //then
-        then(articleRepository).should().save(any(Article::class.java))
+        then(articleRepository).should().getReferenceById(articleDto.id?:throw Exception("id 없음"))
+    }
+
+    @DisplayName("게시글 아이디와 수정 정보를 입력하면 게시글을 수정한다.")
+    @Test
+    fun givenArticleId_whenDeletingArticle_thenNothing() {
+        //given
+        val articleId = any(Long::class.java)
+        given(articleRepository.deleteById(articleId)).will {  }
+        //when
+        articleService.deleteArticle(articleId)
+        //then
+        then(articleRepository).should().deleteById(articleId)
     }
 
 }
