@@ -21,7 +21,7 @@ data class ArticleDto(
             return ArticleDto(
                 id = article.getId(),
                 title = article.title,
-                hashTag = article.hashTag,
+                hashTag = "",
                 content = article.content,
                 createdAt = article.getCreatedAt(),
                 createdBy = article.getCreatedBy()
@@ -30,6 +30,6 @@ data class ArticleDto(
     }
 
     fun toEntity(): Article {
-        return Article(title = this.title, hashTag = this.hashTag, content = content)
+        return Article(title = this.title, content = content)
     }
 }

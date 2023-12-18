@@ -21,14 +21,12 @@ import java.time.LocalDateTime
 @Table(
     indexes = [
         Index(columnList = "title"),
-        Index(columnList = "hashtag"),
         Index(columnList = "createdAt"),
         Index(columnList = "createdBy")
     ]
 )
 class Article(
-    @Column(nullable = false, length = 30) var title: String,
-    var hashTag: String?,
+    @Column(nullable = false) var title: String,
     @Column(nullable = false, length = 2000) var content: String
 ) : AuditingFields() {
     @Id
@@ -37,6 +35,15 @@ class Article(
     @Exclude
     @OneToMany(mappedBy = "article", cascade = [CascadeType.ALL])
     private val articleComments: MutableSet<ArticleComment> = linkedSetOf();
+
+    @ManyToMany(cascade = [CascadeType.PERSIST,CascadeType.MERGE])
+    @JoinTable(
+        name = "article_hashtags",
+        joinColumns = [JoinColumn(name = "article_id")],
+        inverseJoinColumns = [JoinColumn(name = "hashtag_id")]
+    )
+    var hashtags: MutableSet<Hashtag> = mutableSetOf()
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

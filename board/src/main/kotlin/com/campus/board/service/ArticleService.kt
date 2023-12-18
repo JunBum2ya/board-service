@@ -15,7 +15,7 @@ import java.util.stream.Collectors
 
 @Transactional
 @Service
-class ArticleService(val articleRepository: ArticleRepository) {
+class ArticleService(private val articleRepository: ArticleRepository) {
 
     private val logger = LoggerFactory.getLogger(ArticleService::class.java)
 
@@ -31,10 +31,16 @@ class ArticleService(val articleRepository: ArticleRepository) {
                 SearchType.CONTENT -> articleRepository.findArticleByContentContaining(it, pageable)
                 SearchType.ID -> articleRepository.findAll(pageable)
                 SearchType.NICKNAME -> articleRepository.findArticleByCreatedBy(it, pageable)
-                SearchType.HASHTAG -> articleRepository.findArticleByHashTag(it, pageable)
+                SearchType.HASHTAG -> articleRepository.findAll(pageable)
                 SearchType.NONE -> articleRepository.findAll(pageable)
             }
         }?.map { ArticleDto.from(it) } ?: articleRepository.findAll(pageable).map { ArticleDto.from(it) }
+    }
+
+    @Transactional(readOnly = true)
+    fun getArticle(articleId: Long): ArticleDto {
+        return articleRepository.findById(articleId).map { ArticleDto.from(it) }
+            .orElseThrow { EntityNotFoundException("게시글이 없습니다 - articleId: $articleId") }
     }
 
     /**
@@ -53,7 +59,6 @@ class ArticleService(val articleRepository: ArticleRepository) {
             val article = articleRepository.getReferenceById(articleId)
             article.title = articleDto.title
             article.content = articleDto.content
-            article.hashTag = articleDto.hashTag
             return ArticleDto.from(article)
         } catch (e: EntityNotFoundException) {
             logger.error("게시글 업데이트 실패. 게시글을 수정하는데 필요한 정보를 찾을 수 없습니다 - {}", e.localizedMessage)
