@@ -9,6 +9,7 @@ import com.campus.board.repository.ArticleRepository
 import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.stream.Collectors
@@ -23,8 +24,7 @@ class ArticleService(private val articleRepository: ArticleRepository) {
      * page 검색
      */
     @Transactional(readOnly = true)
-    fun searchArticles(articleSearchParam: ArticleSearchParam): Page<ArticleDto> {
-        val pageable = articleSearchParam.pageable
+    fun searchArticles(articleSearchParam: ArticleSearchParam,pageable: Pageable): Page<ArticleDto> {
         return articleSearchParam.searchKeyword?.let {
             when (articleSearchParam.searchType) {
                 SearchType.TITLE -> articleRepository.findArticleByTitleContaining(it, pageable)
