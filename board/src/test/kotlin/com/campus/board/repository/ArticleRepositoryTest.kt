@@ -26,7 +26,7 @@ class ArticleRepositoryTest(@Autowired private val articleRepository : ArticleRe
 
     @BeforeEach
     fun saveDefaultArticle() {
-        testArticle = Article(title = "test 게시글", hashTag = "#test #jpa #database", content = "첫번째 게시글이 될것 같습니다.")
+        testArticle = Article(title = "test 게시글", content = "첫번째 게시글이 될것 같습니다.")
         articleRepository.save(testArticle?:throw Exception("DB ERROR"))
     }
 
@@ -37,7 +37,7 @@ class ArticleRepositoryTest(@Autowired private val articleRepository : ArticleRe
 
     @DisplayName("select test")
     @Test
-    fun given_whenSelect_thenWorksFine() {
+    fun givenTestData_whenSelecting_thenWorksFine() {
         val articles = articleRepository.findAll()
         assertThat(articles).isNotNull.hasSize(1)
     }
@@ -52,7 +52,7 @@ class ArticleRepositoryTest(@Autowired private val articleRepository : ArticleRe
     @DisplayName("insert test")
     @Test
     fun given_whenInsert_thenWorksFine() {
-        val article = Article(title = "test 게시글", hashTag = "#test #jpa #database", content = "첫번째 게시글이 될것 같습니다.")
+        val article = Article(title = "test 게시글", content = "첫번째 게시글이 될것 같습니다.")
         val savedArticle = articleRepository.save(article)
         assertThat(savedArticle).isNotNull
         assertThat(article.getId()).isNotNull()
