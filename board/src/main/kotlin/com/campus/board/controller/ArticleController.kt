@@ -6,6 +6,7 @@ import com.campus.board.dto.ArticleSearchParam
 import com.campus.board.dto.request.ArticleRequest
 import com.campus.board.dto.response.ArticleResponse
 import com.campus.board.service.ArticleService
+import com.campus.board.service.PaginationService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
 @RequestMapping("/articles")
-class ArticleController(val articleService: ArticleService) {
+class ArticleController(val articleService: ArticleService,val paginationService: PaginationService) {
 
     @GetMapping
     fun articles(articleSearchParam: ArticleSearchParam,modelMap : ModelMap) : String {
