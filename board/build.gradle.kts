@@ -75,6 +75,8 @@ dependencies {
     implementation("com.infobip:infobip-spring-data-jpa-querydsl-boot-starter:8.1.1")
     // https://mvnrepository.com/artifact/org.assertj/assertj-core
     testImplementation("org.assertj:assertj-core:3.24.2")
+    // https://mvnrepository.com/artifact/org.mockito.kotlin/mockito-kotlin
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
     kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
 }
 
