@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/articles")
@@ -24,12 +25,17 @@ class ArticleController(val articleService: ArticleService, val paginationServic
 
     @GetMapping
     fun articles(
-        articleSearchParam: ArticleSearchParam,
+        @RequestParam(required = false) searchType: SearchType?,
+        @RequestParam(required = false) searchValue: String?,
         @PageableDefault(size = 10, sort = ["createdAt"], direction = Sort.Direction.DESC) pageable: Pageable,
         map: ModelMap
     ): String {
-        val articles = articleService.searchArticles(articleSearchParam,pageable).map { ArticleResponse.from(it) }
-        val barNumbers = paginationService.getPaginationBarNumbers(pageable.pageNumber, articles.totalPages)
+        val articles = articleService.searchArticles(
+            searchValue = searchValue,
+            searchType = searchType?:SearchType.NONE,
+            pageable = pageable
+        ).map { ArticleResponse.from(it) }
+        val barNumbers = paginationService.getPaginationBarNumbers(currentPageNumber = pageable.pageNumber, totalPages =  articles.totalPages)
         map["articles"] = articles
         map["paginationBarNumbers"] = barNumbers
         map["searchTypes"] = SearchType.values()

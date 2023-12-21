@@ -1,6 +1,7 @@
 package com.campus.board.service
 
 import com.campus.board.domain.Article
+import com.campus.board.domain.constant.SearchType
 import com.campus.board.dto.ArticleDto
 import com.campus.board.dto.ArticleSearchParam
 import com.campus.board.repository.ArticleRepository
@@ -28,15 +29,14 @@ class ArticleServiceTest {
     @Test
     fun givenEmptyArticleDto_whenSearchArticles_thenReturnsEmptyArticles() {
         //given
-        val articleSearchParam = ArticleSearchParam()
-        given(articleRepository.findAll(articleSearchParam.pageable)).willReturn(Page.empty())
+        given(articleRepository.findAll(any(Pageable::class.java))).willReturn(Page.empty())
         //when
-        val emptyPage = articleService.searchArticles(articleSearchParam)
+        val emptyPage = articleService.searchArticles(searchType = SearchType.NONE, pageable = Pageable.ofSize(10))
         //then
         assertThat(emptyPage).isNotNull
         assertThat(emptyPage.totalPages).isEqualTo(1)
         assertThat(emptyPage.pageable.isUnpaged).isTrue
-        then(articleRepository).should().findAll(articleSearchParam.pageable)
+        then(articleRepository).should().findAll(any(Pageable::class.java))
     }
 
     @DisplayName("게시글 정보를 입력하면 게시글을 저장한다.")

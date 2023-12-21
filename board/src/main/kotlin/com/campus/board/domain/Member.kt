@@ -17,8 +17,13 @@ class Member(
     @Column(nullable = false) var password: String,
     @Column(length = 100) var email: String,
     @Column(length = 100) var nickname: String,
-    var memo : String
+    var memo : String? = null
 ) : AuditingFields() {
+
+    fun getId() : String {
+        return this.id
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

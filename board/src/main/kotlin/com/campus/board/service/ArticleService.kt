@@ -24,17 +24,18 @@ class ArticleService(private val articleRepository: ArticleRepository) {
      * page 검색
      */
     @Transactional(readOnly = true)
-    fun searchArticles(articleSearchParam: ArticleSearchParam,pageable: Pageable): Page<ArticleDto> {
-        return articleSearchParam.searchKeyword?.let {
-            when (articleSearchParam.searchType) {
-                SearchType.TITLE -> articleRepository.findArticleByTitleContaining(it, pageable)
-                SearchType.CONTENT -> articleRepository.findArticleByContentContaining(it, pageable)
-                SearchType.ID -> articleRepository.findAll(pageable)
-                SearchType.NICKNAME -> articleRepository.findArticleByCreatedBy(it, pageable)
-                SearchType.HASHTAG -> articleRepository.findAll(pageable)
-                SearchType.NONE -> articleRepository.findAll(pageable)
+    fun searchArticles(searchType: SearchType, searchValue: String? = null, pageable: Pageable?): Page<ArticleDto> {
+        val defaultPageable = Pageable.ofSize(10)
+        return searchValue?.let {
+            when (searchType) {
+                SearchType.TITLE -> articleRepository.findArticleByTitleContaining(it, pageable?:defaultPageable)
+                SearchType.CONTENT -> articleRepository.findArticleByContentContaining(it, pageable?:defaultPageable)
+                SearchType.ID -> articleRepository.findAll(pageable?:defaultPageable)
+                SearchType.NICKNAME -> articleRepository.findArticleByCreatedBy(it, pageable?:defaultPageable)
+                SearchType.HASHTAG -> articleRepository.findAll(pageable?:defaultPageable)
+                SearchType.NONE -> articleRepository.findAll(pageable?:defaultPageable)
             }
-        }?.map { ArticleDto.from(it) } ?: articleRepository.findAll(pageable).map { ArticleDto.from(it) }
+        }?.map { ArticleDto.from(it) } ?: articleRepository.findAll(pageable?:defaultPageable).map { ArticleDto.from(it) }
     }
 
     @Transactional(readOnly = true)
