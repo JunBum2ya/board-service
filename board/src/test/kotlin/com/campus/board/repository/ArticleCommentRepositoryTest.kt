@@ -26,7 +26,7 @@ class ArticleCommentRepositoryTest(@Autowired val articleRepository: ArticleRepo
 
     @BeforeEach
     fun saveTestData() {
-        val article = Article(title = "test 게시글", hashTag = "#test #jpa #database", content = "첫번째 게시글이 될것 같습니다.")
+        val article = Article(title = "test 게시글", content = "첫번째 게시글이 될것 같습니다.")
         articleRepository.save(article)
         testArticleComment = ArticleComment(article = article, content = "첫번째 게시글의 덧글")
         articleCommentRepository.save(ArticleComment(article = article, content = "첫번째 게시글의 첫번째 게시글"))

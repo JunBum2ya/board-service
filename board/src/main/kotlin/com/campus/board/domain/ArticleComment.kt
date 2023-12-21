@@ -24,7 +24,7 @@ import java.time.LocalDateTime
     ]
 )
 class ArticleComment(
-    @ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "article_id") val article: Article,
+    @ManyToOne(fetch = FetchType.LAZY, optional = false) val article: Article,
     @Column(nullable = false, length = 1000) var content: String
 ) : AuditingFields() {
     @Id
