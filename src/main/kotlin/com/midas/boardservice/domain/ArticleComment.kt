@@ -14,7 +14,7 @@ class ArticleComment(
     val member: Member,
     @Column(updatable = false) private var parentCommentId: Long,
     @Column(nullable = false, length = 500) private var content: String
-) {
+): BaseEntity() {
     @OrderBy("createdAt ASC")
     @OneToMany(mappedBy = "parentCommentId", cascade = [CascadeType.ALL])
     private val childComments = LinkedHashSet<ArticleComment>()
