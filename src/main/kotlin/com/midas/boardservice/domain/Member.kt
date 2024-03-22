@@ -12,8 +12,12 @@ class Member(
     @Column(nullable = false, length = 50, unique = true) @Comment("이메일") private var email: String,
     @Column(nullable = false, length = 30) @Comment("닉네임") private var nickname: String,
     @Column(nullable = false) @Comment("패스워드") private var password: String,
-    private var memo: String?
+    private var memo: String? = null
 ): BaseEntity() {
+
+    fun getId(): String {
+        return this.id
+    }
 
     /**
      * 필드 수정

@@ -19,19 +19,35 @@ open class BaseEntity {
     @CreatedDate
     @Column(nullable = false, updatable = false)
     @Comment("등록일시")
-    protected var createdAt: LocalDateTime? = null
+    private var createdAt: LocalDateTime? = null
     @CreatedBy
     @Column(nullable = false, updatable = false, length = 30)
     @Comment("등록자")
-    protected var createdBy: String? = null
+    private var createdBy: String? = null
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @LastModifiedDate
     @Column(nullable = false, updatable = false)
     @Comment("최종수정일시")
-    protected var updatedAt: LocalDateTime? = null
+    private var updatedAt: LocalDateTime? = null
     @LastModifiedBy
     @Column(nullable = false, updatable = false, length = 30)
     @Comment("최종수정자")
-    protected var updatedBy: String? = null
+    private var updatedBy: String? = null
+
+    fun getCreatedAt(): LocalDateTime? {
+        return this.createdAt
+    }
+
+    fun getCreatedBy(): String? {
+        return this.createdBy
+    }
+
+    fun getUpdatedAt(): LocalDateTime? {
+        return this.updatedAt
+    }
+
+    fun getUpdatedBy(): String? {
+        return this.updatedBy
+    }
 
 }
