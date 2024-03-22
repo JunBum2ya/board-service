@@ -18,6 +18,18 @@ class Member(
     fun getId(): String {
         return this.id
     }
+    fun getEmail(): String {
+        return this.email
+    }
+    fun getNickname(): String {
+        return this.nickname
+    }
+    fun getPassword(): String {
+        return this.password
+    }
+    fun getMemo(): String? {
+        return this.memo
+    }
 
     /**
      * 필드 수정
