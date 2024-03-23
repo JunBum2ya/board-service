@@ -6,6 +6,7 @@ import com.midas.boardservice.domain.ArticleComment
 import com.midas.boardservice.domain.Hashtag
 import com.midas.boardservice.domain.Member
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.InstanceOfAssertFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -22,17 +23,24 @@ import org.springframework.test.context.ActiveProfiles
 @Import(TestJpaConfig::class)
 class ArticleRepositoryTest(
     @Autowired private val articleRepository: ArticleRepository,
-    @Autowired private val memberRepository: MemberRepository
+    @Autowired private val memberRepository: MemberRepository,
+    @Autowired private val articleCommentRepository: ArticleCommentRepository
 ) {
-
     private var article: Article? = null
 
     @BeforeEach
     fun initArticleData() {
-        val member = memberRepository.save(Member(id = "test", email = "test@test.com", nickname = "test", password = "1234"))
+        val member =
+            memberRepository.save(Member(id = "test", email = "test@test.com", nickname = "test", password = "1234"))
         article = Article(member = member, title = "test", content = "content")
         article?.addHashtag(Hashtag(hashtagName = "test"))
-        article?.let { articleRepository.save(it) }
+        article?.let {
+            val articleComment = ArticleComment(article = it, member = member, content = "test")
+            it.articleComments.add(articleComment)
+            articleRepository.saveAndFlush(it)
+            articleComment.addChildComment(ArticleComment(article = it, member = member, content = "test1"))
+            articleComment.addChildComment(ArticleComment(article = it, member = member, content = "test2"))
+        }
     }
 
     @DisplayName("pageable로 검색을 한다면 article page가 반환된다.")
@@ -54,7 +62,14 @@ class ArticleRepositoryTest(
     fun givenCountAndMember_whenSaveMember_thenMemberCountIsMorePreviousCount() {
         //given
         val count = memberRepository.count()
-        val member = memberRepository.save(Member(id = "member", email = "member@test.com", nickname = "test", password = "1234"))
+        val member = memberRepository.save(
+            Member(
+                id = "member",
+                email = "member@test.com",
+                nickname = "test",
+                password = "1234"
+            )
+        )
         val article = Article(member = member, title = "test", content = "content")
         article.addHashtags(mutableSetOf(Hashtag(hashtagName = "save")))
         //when
@@ -79,7 +94,7 @@ class ArticleRepositoryTest(
         val updatedArticle = articleRepository.findByIdOrNull(article.getId())
         assertThat(updatedArticle?.hashtags)
             .hasSize(1)
-            .extracting("hashtagName",String::class.java)
+            .extracting("hashtagName", String::class.java)
             .containsExactly("spring")
     }
 
@@ -89,10 +104,43 @@ class ArticleRepositoryTest(
         //given
         val articles = articleRepository.findAll()
         val count = articles.size
-        val memberId = articles.first().getId()?:-1L
+        val memberId = articles.first().getId() ?: -1L
         //when
         articleRepository.deleteById(memberId)
         //then
-        assertThat(articleRepository.count()).isEqualTo(count -1L)
+        assertThat(articleRepository.count()).isEqualTo(count - 1L)
+    }
+
+    @DisplayName("댓글 아이디로 조회를 하면 댓글이 반환된다.")
+    @Test
+    fun givenArticleCommentId_whenSearchArticleComment_thenReturnsArticleComment() {
+        //given
+        val articleCommentId = article?.articleComments?.first()?.getId() ?: -1L
+        //when
+        val articleComment = articleCommentRepository.findByIdOrNull(articleCommentId)
+        //then
+        assertThat(articleComment)
+            .isNotNull()
+            .hasFieldOrPropertyWithValue("id", articleCommentId)
+    }
+
+    @DisplayName("댓글에 대댓글을 저장한다.")
+    @Test
+    fun givenParentComment_whenSaveArticleComment_thenInsertsChildComment() {
+        //given
+        val articleComment = article!!.articleComments.first()
+        //when
+        articleComment.addChildComment(
+            ArticleComment(
+                member = articleComment.member,
+                article = articleComment.article,
+                content = "test"
+            )
+        )
+        articleCommentRepository.flush()
+        //then
+        val updatedComment = articleCommentRepository.findByIdOrNull(articleComment.getId())!!
+        assertThat(updatedComment).hasFieldOrPropertyWithValue("parentCommentId",null)
+        assertThat(updatedComment.childComments).hasSize(1)
     }
 }
