@@ -1,5 +1,6 @@
 package com.midas.boardservice.domain
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -9,9 +10,9 @@ import jakarta.persistence.ManyToMany
 @Entity
 class Hashtag(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long? = null,
-    val hashtagName: String
+    @Column(nullable = false, length = 30, updatable = false, unique = true) val hashtagName: String
 ) : BaseEntity() {
-    @ManyToMany(mappedBy = "hashtags") private val articles = LinkedHashSet<Article>()
+    @ManyToMany(mappedBy = "hashtags") private val articles = mutableSetOf<Article>()
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

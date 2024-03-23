@@ -22,11 +22,15 @@ class Article(
         inverseJoinColumns = [JoinColumn(name = "hashtag_id")]
     )
     @ManyToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE])
-    private val hashtags = LinkedHashSet<Hashtag>()
+    val hashtags = mutableSetOf<Hashtag>()
 
     @OrderBy("createdAt DESC")
     @OneToMany(mappedBy = "article", cascade = [CascadeType.ALL])
-    private val articleComments = LinkedHashSet<ArticleComment>()
+    val articleComments = mutableSetOf<ArticleComment>()
+
+    fun getId(): Long? {
+        return this.id
+    }
 
     fun update(title: String? = null, content: String? = null) {
         title?.let { this.title = it }
