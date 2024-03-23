@@ -8,16 +8,20 @@ class ArticleComment(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private var id: Long? = null,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "article_id", nullable = false)
+    @JoinColumn(name = "article_id")
     val article: Article,
     @ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "member_id", nullable = false)
     val member: Member,
-    @Column(updatable = false) private var parentCommentId: Long,
+    @Column(updatable = false) private var parentCommentId: Long? = null,
     @Column(nullable = false, length = 500) private var content: String
 ): BaseEntity() {
     @OrderBy("createdAt ASC")
     @OneToMany(mappedBy = "parentCommentId", cascade = [CascadeType.ALL])
-    private val childComments = LinkedHashSet<ArticleComment>()
+    val childComments = mutableSetOf<ArticleComment>()
+
+    fun getId(): Long? {
+        return this.id
+    }
 
     /**
      * 수정 메소드
