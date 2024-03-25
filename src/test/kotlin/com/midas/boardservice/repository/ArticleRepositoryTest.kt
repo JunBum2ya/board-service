@@ -86,7 +86,7 @@ class ArticleRepositoryTest(
         //then
         assertThat(page).isNotEmpty
         assertThat(page.size).isEqualTo(10)
-        assertThat(page.first().hashtags.size).isEqualTo(1)
+        assertThat(page.first().hashtags.size).isEqualTo(2)
     }
 
     @DisplayName("Member를 저장하면 member가 반환된다.")

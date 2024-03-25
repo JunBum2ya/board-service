@@ -22,7 +22,7 @@ class Article(
         inverseJoinColumns = [JoinColumn(name = "hashtag_id")]
     )
     @ManyToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE])
-    val hashtags = mutableSetOf<Hashtag>()
+    val hashtags = mutableListOf<Hashtag>()
 
     @OrderBy("createdAt DESC")
     @OneToMany(mappedBy = "article", cascade = [CascadeType.ALL])
