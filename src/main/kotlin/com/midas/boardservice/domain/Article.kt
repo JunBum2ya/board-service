@@ -32,6 +32,14 @@ class Article(
         return this.id
     }
 
+    fun getTitle(): String {
+        return this.title
+    }
+
+    fun getContent(): String {
+        return this.content
+    }
+
     fun update(title: String? = null, content: String? = null) {
         title?.let { this.title = it }
         content?.let { this.content = it }
