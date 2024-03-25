@@ -1,4 +1,4 @@
-package com.midas.boardservice.exception
+package com.midas.boardservice.domain.contant
 
 enum class ResultStatus(val code: String, val message: String) {
     SUCCESS(code = "200", "success"),
