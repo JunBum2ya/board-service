@@ -1,10 +1,12 @@
 package com.midas.boardservice.repository
 
+import com.midas.boardservice.config.JpaConfig
 import com.midas.boardservice.config.TestJpaConfig
 import com.midas.boardservice.domain.Article
 import com.midas.boardservice.domain.ArticleComment
 import com.midas.boardservice.domain.Hashtag
 import com.midas.boardservice.domain.Member
+import com.midas.boardservice.dto.param.ArticleSearchParam
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.InstanceOfAssertFactory
 import org.junit.jupiter.api.BeforeEach
@@ -54,6 +56,36 @@ class ArticleRepositoryTest(
         assertThat(page).isNotEmpty
         assertThat(page.size).isEqualTo(10)
         assertThat(page.first()).isEqualTo(article)
+        assertThat(page.first().hashtags.size).isEqualTo(1)
+    }
+
+    @DisplayName("빈 파라미터와 pageable로 검색을 한다면 article page가 반환된다.")
+    @Test
+    fun givenEmptyArticleSearchParamAndPageable_whenSearchArticle_thenReturnsArticlePage() {
+        //given
+        initQueryDslTestData()
+        val param = ArticleSearchParam()
+        val pageable = Pageable.ofSize(10)
+        //when
+        val page = articleRepository.searchArticles(param,pageable)
+        //then
+        assertThat(page).isNotEmpty
+        assertThat(page.size).isEqualTo(10)
+        assertThat(page.first().hashtags.size).isEqualTo(1)
+    }
+
+    @DisplayName("파라미터와 pageable로 검색을 한다면 article page가 반환된다.")
+    @Test
+    fun givenArticleSearchParamAndPageable_whenSearchArticle_thenReturnsArticlePage() {
+        //given
+        initQueryDslTestData()
+        val param = ArticleSearchParam(title = "one", hashtag = listOf("과학","영어"))
+        val pageable = Pageable.ofSize(10)
+        //when
+        val page = articleRepository.searchArticles(param,pageable)
+        //then
+        assertThat(page).isNotEmpty
+        assertThat(page.size).isEqualTo(10)
         assertThat(page.first().hashtags.size).isEqualTo(1)
     }
 
@@ -142,5 +174,20 @@ class ArticleRepositoryTest(
         val updatedComment = articleCommentRepository.findByIdOrNull(articleComment.getId())!!
         assertThat(updatedComment).hasFieldOrPropertyWithValue("parentCommentId",null)
         assertThat(updatedComment.childComments).hasSize(1)
+    }
+
+    fun initQueryDslTestData() {
+        val hashtag1 = Hashtag(hashtagName = "과학")
+        val hashtag2 = Hashtag(hashtagName = "사회")
+        val member = memberRepository.save(Member(id = "query", email = "query@test.com", nickname = "query", password = "1234"))
+        val article1 = Article(member = member, title = "one", content = "first")
+        article1.addHashtags(listOf(hashtag1,hashtag2))
+        val article2 = Article(member = member, title = "two", content = "first_second")
+        article2.addHashtag(hashtag1)
+        val article3 = Article(member = member, title = "three", content = "third")
+        article3.addHashtag(hashtag2)
+        articleRepository.save(article1)
+        articleRepository.save(article2)
+        articleRepository.save(article3)
     }
 }

@@ -11,7 +11,11 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class ArticleService {
     @Transactional(readOnly = true)
-    fun searchArticles(searchType: SearchType? = null,searchText: String? = null, pageable: Pageable): Page<ArticleDto> {
-
+    fun searchArticles(
+        searchType: SearchType? = null,
+        searchText: String? = null,
+        pageable: Pageable
+    ): Page<ArticleDto> {
+        return Page.empty()
     }
 }
