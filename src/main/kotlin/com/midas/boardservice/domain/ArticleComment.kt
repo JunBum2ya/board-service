@@ -23,6 +23,14 @@ class ArticleComment(
         return this.id
     }
 
+    fun getParentCommentId(): Long? {
+        return this.parentCommentId
+    }
+
+    fun getContent(): String {
+        return this.content
+    }
+
     /**
      * 수정 메소드
      */
