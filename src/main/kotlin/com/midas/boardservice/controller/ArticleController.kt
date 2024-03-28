@@ -1,7 +1,9 @@
 package com.midas.boardservice.controller
 
+import com.midas.boardservice.domain.contant.FormStatus
 import com.midas.boardservice.domain.contant.SearchType
 import com.midas.boardservice.dto.response.ArticleResponse
+import com.midas.boardservice.dto.response.ArticleWithCommentsResponse
 import com.midas.boardservice.service.ArticleService
 import com.midas.boardservice.service.PaginationService
 import org.springframework.data.domain.Pageable
@@ -10,6 +12,7 @@ import org.springframework.data.web.PageableDefault
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
@@ -37,5 +40,19 @@ class ArticleController(private val articleService: ArticleService, private val 
         map["searchTypeHashtag"] = SearchType.HASHTAG
 
         return "articles/index"
+    }
+
+    @GetMapping("/{articleId}")
+    fun article(@PathVariable articleId: Long, map: ModelMap): String {
+        val article = ArticleWithCommentsResponse.from(articleService.getArticleWithComments(articleId))
+        map["article"] = article
+        map["searchTypeHashtag"] = SearchType.HASHTAG
+        return "articles/detail"
+    }
+
+    @GetMapping("/form")
+    fun articleForm(map: ModelMap): String {
+        map["formStatus"] = FormStatus.CREATE
+        return "articles/form"
     }
 }

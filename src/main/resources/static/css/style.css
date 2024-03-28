@@ -1,0 +1,11 @@
+.news-item .news-title {
+    font-size: 28px;
+}
+.news-item .news-title a {
+    cursor: pointer;
+    text-decoration: none;
+    color: #000;
+}
+.news-item .news-contents img {
+    max-width: 122px;
+}
