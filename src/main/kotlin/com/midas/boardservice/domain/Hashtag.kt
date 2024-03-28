@@ -13,6 +13,9 @@ class Hashtag(
     @Column(nullable = false, length = 30, updatable = false, unique = true) val hashtagName: String
 ) : BaseEntity() {
     @ManyToMany(mappedBy = "hashtags") val articles = mutableListOf<Article>()
+    fun getId(): Long? {
+        return this.id
+    }
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

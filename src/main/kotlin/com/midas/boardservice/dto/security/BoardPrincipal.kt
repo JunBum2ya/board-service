@@ -7,9 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.oauth2.core.user.OAuth2User
 
 data class BoardPrincipal(
-    val username: String,
-    val password: String,
-    val authorities: Collection<out GrantedAuthority>,
+    private val username: String,
+    private val password: String,
+    private val authorities: Collection<out GrantedAuthority>,
     val email: String,
     val nickname: String,
     val memo: String?,
