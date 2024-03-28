@@ -8,6 +8,7 @@ import com.midas.boardservice.dto.ArticleWithCommentsDto
 import com.midas.boardservice.dto.param.ArticleSearchParam
 import com.midas.boardservice.exception.CustomException
 import com.midas.boardservice.repository.ArticleRepository
+import com.midas.boardservice.repository.MemberRepository
 import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service
-class ArticleService(private val articleRepository: ArticleRepository) {
+class ArticleService(private val articleRepository: ArticleRepository,private val memberRepository: MemberRepository) {
     private val logger = LoggerFactory.getLogger(ArticleService::class.java)
     /**
      * 동적으로 게시글 조회
@@ -63,6 +64,20 @@ class ArticleService(private val articleRepository: ArticleRepository) {
         return articleRepository.findByIdOrNull(articleId)
             ?.let { ArticleDto.from(it) }
             ?:throw CustomException(ResultStatus.ACCESS_NOT_EXIST_ENTITY,"게시글이 없습니다. - $articleId")
+    }
+
+    /**
+     * 게시글 저장
+     */
+    @Throws(CustomException::class)
+    fun saveArticle(articleDto: ArticleDto): ArticleDto {
+        try {
+            val member = memberRepository.getReferenceById(articleDto.memberDto.id)
+            val article = articleDto.toEntity(member)
+            return ArticleDto.from(articleRepository.save(article))
+        } catch (e: EntityNotFoundException) {
+            throw CustomException(ResultStatus.ACCESS_NOT_EXIST_ENTITY)
+        }
     }
 
     /**

@@ -2,17 +2,22 @@ package com.midas.boardservice.controller
 
 import com.midas.boardservice.domain.contant.FormStatus
 import com.midas.boardservice.domain.contant.SearchType
+import com.midas.boardservice.dto.request.ArticleRequest
 import com.midas.boardservice.dto.response.ArticleResponse
 import com.midas.boardservice.dto.response.ArticleWithCommentsResponse
+import com.midas.boardservice.dto.security.BoardPrincipal
 import com.midas.boardservice.service.ArticleService
 import com.midas.boardservice.service.PaginationService
+import jakarta.validation.Valid
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
@@ -32,7 +37,7 @@ class ArticleController(private val articleService: ArticleService, private val 
         map: ModelMap
     ): String {
         val articles = articleService.searchArticles(searchType, searchText, pageable).map { ArticleResponse.from(it) }
-        val barNumbers = paginationService.getPaginationBarNumbers(articles.number,articles.totalPages)
+        val barNumbers = paginationService.getPaginationBarNumbers(articles.number, articles.totalPages)
 
         map["articles"] = articles
         map["paginationBarNumbers"] = barNumbers
@@ -54,5 +59,14 @@ class ArticleController(private val articleService: ArticleService, private val 
     fun articleForm(map: ModelMap): String {
         map["formStatus"] = FormStatus.CREATE
         return "articles/form"
+    }
+
+    @PostMapping("/form")
+    fun postNewArticle(
+        @AuthenticationPrincipal boardPrincipal: BoardPrincipal,
+        @Valid articleRequest: ArticleRequest
+    ): String {
+        articleService
+        return "redirect:/articles"
     }
 }

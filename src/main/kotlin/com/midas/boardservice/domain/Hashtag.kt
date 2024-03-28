@@ -9,10 +9,10 @@ import jakarta.persistence.ManyToMany
 
 @Entity
 class Hashtag(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long? = null,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private var id: Long? = null,
     @Column(nullable = false, length = 30, updatable = false, unique = true) val hashtagName: String
 ) : BaseEntity() {
-    @ManyToMany(mappedBy = "hashtags") private val articles = mutableListOf<Article>()
+    @ManyToMany(mappedBy = "hashtags") val articles = mutableListOf<Article>()
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
