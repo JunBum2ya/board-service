@@ -1,32 +1,55 @@
 package com.midas.boardservice.controller
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.midas.boardservice.domain.Article
+import com.midas.boardservice.domain.Member
+import com.midas.boardservice.domain.contant.FormStatus
 import com.midas.boardservice.domain.contant.SearchType
+import com.midas.boardservice.dto.ArticleDto
+import com.midas.boardservice.dto.MemberDto
+import com.midas.boardservice.dto.request.ArticleRequest
+import com.midas.boardservice.dto.security.BoardPrincipal
 import com.midas.boardservice.service.ArticleService
 import com.midas.boardservice.service.PaginationService
+import com.midas.boardservice.util.FormDataEncoder
+import com.midas.boardservice.util.TestAuthenticationPrincipal
+import io.kotest.assertions.any
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.mockito.BDDMockito.any
+import org.mockito.BDDMockito.given
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver
 import org.springframework.http.MediaType
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.test.context.support.TestExecutionEvent
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.security.test.context.support.WithUserDetails
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import java.security.Principal
 
 
+@WithUserDetails(value = "unoTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)
 @WebMvcTest
 class ArticleControllerTest : DescribeSpec({
     val articleService = mockk<ArticleService>()
     val paginationService = mockk<PaginationService>()
     val articleController = ArticleController(articleService, paginationService)
+    val mapper = ObjectMapper()
+    val formDataEncoder = FormDataEncoder(mapper)
 
     val mvc = MockMvcBuilders.standaloneSetup(articleController)
-        .setCustomArgumentResolvers(PageableHandlerMethodArgumentResolver())
+        .setCustomArgumentResolvers(PageableHandlerMethodArgumentResolver(),TestAuthenticationPrincipal())
         .build()
 
     describe("[view][GET] 게시글 리스트 (게시판) 페이지") {
@@ -74,8 +97,56 @@ class ArticleControllerTest : DescribeSpec({
                 .andExpect(model().attributeExists("articles"))
                 .andExpect(model().attributeExists("paginationBarNumbers"))
             verify { articleService.searchArticles(null, null, pageable) }
-            verify { paginationService.getPaginationBarNumbers(any(),any()) }
+            verify { paginationService.getPaginationBarNumbers(any(), any()) }
         }
     }
 
-})
+    describe("[view][GET] 새 게시글 작성 페이지") {
+        it("정상 호출") {
+            mvc.perform(get("/articles/form"))
+                .andExpect(status().isOk)
+                .andExpect(view().name("articles/form"))
+                .andExpect(model().attribute("formStatus", FormStatus.CREATE))
+        }
+    }
+
+    describe("[view][POST] 새 게시글 등록") {
+        val request = ArticleRequest(title = "new title", content = "new content")
+        every { articleService.saveArticle(any(ArticleDto::class)) }.returns(buildArticleDto())
+        it("정상 호출") {
+            mvc.perform(
+                post("/articles/form")
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .content(formDataEncoder.encode(request)!!)
+            )
+                .andExpect(status().is3xxRedirection)
+                .andExpect(view().name("redirect:/articles"))
+                .andExpect(redirectedUrl("/articles"))
+            verify { articleService.saveArticle(any(ArticleDto::class)) }
+        }
+    }
+
+}) {
+    companion object {
+        fun buildArticleDto(): ArticleDto {
+            return ArticleDto.from(buildArticle())
+        }
+
+        fun buildMemberDto(): MemberDto {
+            return MemberDto.from(buildMember())
+        }
+
+        private fun buildArticle(): Article {
+            return Article(
+                id = 1L,
+                member = buildMember(),
+                title = "title",
+                content = "content"
+            )
+        }
+
+        private fun buildMember(): Member {
+            return Member(id = "test", email = "test@test.com", nickname = "test", password = "1234")
+        }
+    }
+}
