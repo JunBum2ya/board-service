@@ -66,7 +66,7 @@ class ArticleController(private val articleService: ArticleService, private val 
         @AuthenticationPrincipal boardPrincipal: BoardPrincipal,
         @Valid articleRequest: ArticleRequest
     ): String {
-        articleService
+        articleService.saveArticle(articleRequest.toDto(boardPrincipal.toDto()))
         return "redirect:/articles"
     }
 }

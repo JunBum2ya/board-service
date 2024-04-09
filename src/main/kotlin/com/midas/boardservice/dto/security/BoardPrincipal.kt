@@ -31,6 +31,10 @@ data class BoardPrincipal(
         }
     }
 
+    fun toDto(): MemberDto {
+        return MemberDto(id = username, password = password, email = email, nickname = nickname, memo = memo)
+    }
+
     override fun getName(): String {
         return this.username
     }

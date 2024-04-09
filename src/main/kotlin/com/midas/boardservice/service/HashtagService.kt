@@ -16,8 +16,8 @@ class HashtagService(private val hashtagRepository: HashtagRepository) {
      * Hashtag 조회
      */
     @Transactional(readOnly = true)
-    fun findHashtagsByNames(hashtagNames: Set<String>): Set<Hashtag> {
-        return hashtagRepository.findHashtagsByHashtagNameIn(hashtagNames).toSet()
+    fun findHashtagsByNames(hashtagNames: Set<String>): List<Hashtag> {
+        return hashtagRepository.findHashtagsByHashtagNameIn(hashtagNames)
     }
 
     /**

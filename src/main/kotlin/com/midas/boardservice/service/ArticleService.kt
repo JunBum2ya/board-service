@@ -1,5 +1,6 @@
 package com.midas.boardservice.service
 
+import com.midas.boardservice.domain.Hashtag
 import com.midas.boardservice.domain.contant.ResultStatus
 import com.midas.boardservice.domain.contant.SearchType
 import com.midas.boardservice.dto.ArticleCommentDto
@@ -19,8 +20,13 @@ import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service
-class ArticleService(private val articleRepository: ArticleRepository,private val memberRepository: MemberRepository) {
+class ArticleService(
+    private val articleRepository: ArticleRepository,
+    private val memberRepository: MemberRepository,
+    private val hashtagService: HashtagService
+) {
     private val logger = LoggerFactory.getLogger(ArticleService::class.java)
+
     /**
      * 동적으로 게시글 조회
      */
@@ -52,7 +58,7 @@ class ArticleService(private val articleRepository: ArticleRepository,private va
     fun getArticleWithComments(articleId: Long): ArticleWithCommentsDto {
         return articleRepository.findByIdOrNull(articleId)
             ?.let { ArticleWithCommentsDto.from(it) }
-            ?:throw CustomException(ResultStatus.ACCESS_NOT_EXIST_ENTITY,"게시글이 없습니다. - $articleId")
+            ?: throw CustomException(ResultStatus.ACCESS_NOT_EXIST_ENTITY, "게시글이 없습니다. - $articleId")
     }
 
     /**
@@ -63,7 +69,7 @@ class ArticleService(private val articleRepository: ArticleRepository,private va
     fun getArticle(articleId: Long): ArticleDto {
         return articleRepository.findByIdOrNull(articleId)
             ?.let { ArticleDto.from(it) }
-            ?:throw CustomException(ResultStatus.ACCESS_NOT_EXIST_ENTITY,"게시글이 없습니다. - $articleId")
+            ?: throw CustomException(ResultStatus.ACCESS_NOT_EXIST_ENTITY, "게시글이 없습니다. - $articleId")
     }
 
     /**
@@ -73,7 +79,10 @@ class ArticleService(private val articleRepository: ArticleRepository,private va
     fun saveArticle(articleDto: ArticleDto): ArticleDto {
         try {
             val member = memberRepository.getReferenceById(articleDto.memberDto.id)
+            val hashtags = renewHashtagsFromContent(articleDto.content)
+
             val article = articleDto.toEntity(member)
+            article.addHashtags(hashtags)
             return ArticleDto.from(articleRepository.save(article))
         } catch (e: EntityNotFoundException) {
             throw CustomException(ResultStatus.ACCESS_NOT_EXIST_ENTITY)
@@ -89,9 +98,9 @@ class ArticleService(private val articleRepository: ArticleRepository,private va
             val article = articleRepository.getReferenceById(articleId)
             article.update(title = articleData.title, content = articleData.content)
             article.clearHashtags()
-        }catch (e: EntityNotFoundException) {
+        } catch (e: EntityNotFoundException) {
             logger.warn("게시글 업데이트 실패. 게시글을 수정하는데 필요한 정보를 찾을 수 없습니다 - {}", e.localizedMessage)
-            throw CustomException(ResultStatus.ACCESS_NOT_EXIST_ENTITY,"게시글이 없습니다. - $articleId")
+            throw CustomException(ResultStatus.ACCESS_NOT_EXIST_ENTITY, "게시글이 없습니다. - $articleId")
         }
     }
 
@@ -100,5 +109,18 @@ class ArticleService(private val articleRepository: ArticleRepository,private va
      */
     fun deleteArticle(articleId: Long) {
         articleRepository.deleteById(articleId)
+    }
+
+    /**
+     * 해시태그 갱신
+     */
+    fun renewHashtagsFromContent(content: String): List<Hashtag> {
+        val hashtagNamesInContent = hashtagService.parseHashtagNames(content)
+        val hashtags = hashtagService.findHashtagsByNames(hashtagNamesInContent).toMutableList()
+        val existingHashtagNames = hashtags.map { it.hashtagName }.toSet()
+        hashtagNamesInContent.filter { !existingHashtagNames.contains(it) }.forEach {
+            hashtags.add(Hashtag(hashtagName = it))
+        }
+        return hashtags
     }
 }
