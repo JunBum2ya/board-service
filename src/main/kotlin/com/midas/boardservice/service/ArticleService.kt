@@ -72,6 +72,11 @@ class ArticleService(
             ?: throw CustomException(ResultStatus.ACCESS_NOT_EXIST_ENTITY, "게시글이 없습니다. - $articleId")
     }
 
+    @Transactional(readOnly = true)
+    fun getArticleCount(): Long {
+        return articleRepository.count()
+    }
+
     /**
      * 게시글 저장
      */

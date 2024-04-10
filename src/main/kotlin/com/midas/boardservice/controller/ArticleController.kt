@@ -52,6 +52,8 @@ class ArticleController(private val articleService: ArticleService, private val 
     fun article(@PathVariable articleId: Long, map: ModelMap): String {
         val article = ArticleWithCommentsResponse.from(articleService.getArticleWithComments(articleId))
         map["article"] = article
+        map["articleComments"] = article.articleCommentsResponse
+        map["totalCount"] = articleService.getArticleCount()
         map["searchTypeHashtag"] = SearchType.HASHTAG
         return "articles/detail"
     }
