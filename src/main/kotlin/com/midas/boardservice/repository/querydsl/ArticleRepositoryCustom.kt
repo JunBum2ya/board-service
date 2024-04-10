@@ -7,5 +7,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
 interface ArticleRepositoryCustom {
-    fun searchArticles(param: ArticleSearchParam,pageable: Pageable): Page<Article>
+    fun searchArticles(param: ArticleSearchParam, pageable: Pageable): Page<Article>
+    fun findByHashtagNames(hashtagNames: Collection<String>, pageable: Pageable): Page<Article>
 }

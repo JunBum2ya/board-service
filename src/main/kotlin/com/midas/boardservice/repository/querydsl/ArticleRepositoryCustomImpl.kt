@@ -26,6 +26,20 @@ class ArticleRepositoryCustomImpl(private val jpaQueryFactory: JPAQueryFactory) 
         return PageImpl(articles, pageable, countQuery.fetch().size.toLong())
     }
 
+    override fun findByHashtagNames(hashtagNames: Collection<String>, pageable: Pageable): Page<Article> {
+        val article = QArticle.article
+        val hashtag = QHashtag.hashtag
+        val query = jpaQueryFactory.selectFrom(article)
+            .innerJoin(article.hashtags, hashtag)
+            .where(hashtag.hashtagName.`in`(hashtagNames))
+        val countQuery = jpaQueryFactory.select(article.count())
+            .from(article)
+            .innerJoin(article.hashtags, hashtag)
+            .where(hashtag.hashtagName.`in`(hashtagNames))
+        val articles = querydsl!!.applyPagination(pageable, query).fetch()
+        return PageImpl(articles, pageable, countQuery.fetch().size.toLong())
+    }
+
     private fun buildWhereClause(param: ArticleSearchParam): BooleanExpression? {
         val article = QArticle.article
         val hashtag = QHashtag.hashtag

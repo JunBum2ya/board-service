@@ -42,7 +42,7 @@ class ArticleService(
                 SearchType.CONTENT -> ArticleSearchParam(content = it)
                 SearchType.ID -> ArticleSearchParam(memberId = it)
                 SearchType.NICKNAME -> ArticleSearchParam(nickname = it)
-                SearchType.HASHTAG -> ArticleSearchParam(hashtag = listOf(it))
+                SearchType.HASHTAG -> ArticleSearchParam(hashtag = it.split(" "))
                 null -> null
             }
             param?.let { articleRepository.searchArticles(param, pageable) } ?: articleRepository.findAll(pageable)
@@ -80,7 +80,6 @@ class ArticleService(
         try {
             val member = memberRepository.getReferenceById(articleDto.memberDto.id)
             val hashtags = renewHashtagsFromContent(articleDto.content)
-
             val article = articleDto.toEntity(member)
             article.addHashtags(hashtags)
             return ArticleDto.from(articleRepository.save(article))
