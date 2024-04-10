@@ -6,6 +6,7 @@ import com.midas.boardservice.domain.Member
 import com.midas.boardservice.domain.contant.FormStatus
 import com.midas.boardservice.domain.contant.SearchType
 import com.midas.boardservice.dto.ArticleDto
+import com.midas.boardservice.dto.ArticleWithCommentsDto
 import com.midas.boardservice.dto.MemberDto
 import com.midas.boardservice.dto.request.ArticleRequest
 import com.midas.boardservice.dto.security.BoardPrincipal
@@ -123,6 +124,24 @@ class ArticleControllerTest : DescribeSpec({
                 .andExpect(view().name("redirect:/articles"))
                 .andExpect(redirectedUrl("/articles"))
             verify { articleService.saveArticle(any(ArticleDto::class)) }
+        }
+    }
+    describe("[view][GET] 게시글 페이지") {
+        val articleId = 1L
+        val totalCount = 1L
+        every { articleService.getArticleWithComments(any(Long::class)) }
+            .returns(ArticleWithCommentsDto.from(buildArticle()))
+        every { articleService.getArticleCount() }.returns(totalCount)
+        it("정상 호출") {
+            mvc.perform(get("/articles/${articleId}"))
+                .andExpect(status().isOk)
+                .andExpect(view().name("articles/detail"))
+                .andExpect(model().attributeExists("article"))
+                .andExpect(model().attributeExists("articleComments"))
+                .andExpect(model().attribute("totalCount",totalCount))
+                .andExpect(model().attribute("searchTypeHashtag",SearchType.HASHTAG))
+            verify { articleService.getArticleWithComments(any(Long::class)) }
+            verify { articleService.getArticleCount() }
         }
     }
 

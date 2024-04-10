@@ -3,15 +3,19 @@ package com.midas.boardservice.service
 import com.midas.boardservice.domain.Article
 import com.midas.boardservice.domain.Hashtag
 import com.midas.boardservice.domain.Member
+import com.midas.boardservice.domain.contant.ResultStatus
 import com.midas.boardservice.domain.contant.SearchType
 import com.midas.boardservice.dto.ArticleDto
 import com.midas.boardservice.dto.param.ArticleSearchParam
+import com.midas.boardservice.exception.CustomException
 import com.midas.boardservice.repository.ArticleRepository
 import com.midas.boardservice.repository.MemberRepository
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotHaveSize
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldHave
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
@@ -19,6 +23,8 @@ import io.mockk.verify
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.repository.findByIdOrNull
+import java.util.*
 
 class ArticleServiceTest : BehaviorSpec({
 
@@ -86,6 +92,39 @@ class ArticleServiceTest : BehaviorSpec({
                 verify { hashtagService.parseHashtagNames(any(String::class)) }
                 verify { hashtagService.findHashtagsByNames(any()) }
                 verify { articleRepository.save(any(Article::class)) }
+            }
+        }
+    }
+    Given("게시글 ID로 조회를 하면") {
+        val articleId = 1L
+        val article = createArticle()
+        When("게시글이 있을 경우") {
+            every { articleRepository.findByIdOrNull(any(Long::class)) }.returns(article)
+            val articleWithComments = articleService.getArticleWithComments(articleId)
+            Then("댓글 달린 게시글을 반환한다.") {
+                articleWithComments shouldNotBe null
+                articleWithComments.title shouldBe article.getTitle()
+                articleWithComments.content shouldBe article.getContent()
+                verify { articleRepository.findByIdOrNull(any(Long::class)) }
+            }
+        }
+        When("게시글이 없을 경우") {
+            every { articleRepository.findByIdOrNull(any(Long::class)) }.returns(null)
+            val customException = shouldThrow<CustomException> { articleService.getArticleWithComments(articleId) }
+            Then("예외가 발생한다.") {
+                customException.code shouldBe ResultStatus.ACCESS_NOT_EXIST_ENTITY.code
+                customException.message shouldBe "게시글이 없습니다. - 1"
+            }
+        }
+    }
+    Given("게시글 수를") {
+        val expected = 0L
+        every { articleRepository.count() }.returns(expected)
+        When("조회하면") {
+            val actual = articleService.getArticleCount()
+            Then("게시글 수를 반환한다.") {
+                actual shouldBe expected
+                verify { articleRepository.count() }
             }
         }
     }
