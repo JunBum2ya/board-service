@@ -1,6 +1,9 @@
 package com.midas.boardservice.dto
 
+import com.midas.boardservice.domain.Article
 import com.midas.boardservice.domain.ArticleComment
+import com.midas.boardservice.domain.Member
+import com.midas.boardservice.domain.QArticleComment.articleComment
 import com.midas.boardservice.domain.contant.ResultStatus
 import com.midas.boardservice.exception.CustomException
 import java.time.LocalDateTime
@@ -31,5 +34,9 @@ data class ArticleCommentDto(
                 updatedBy = articleComment.getUpdatedBy()
             )
         }
+    }
+
+    fun toEntity(article: Article, member: Member): ArticleComment {
+        return ArticleComment(article = article, member = member, content = content)
     }
 }
