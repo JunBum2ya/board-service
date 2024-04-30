@@ -6,6 +6,7 @@ import com.midas.boardservice.domain.Member
 import com.midas.boardservice.domain.contant.ResultStatus
 import com.midas.boardservice.domain.contant.SearchType
 import com.midas.boardservice.dto.ArticleDto
+import com.midas.boardservice.dto.MemberDto
 import com.midas.boardservice.dto.param.ArticleSearchParam
 import com.midas.boardservice.exception.CustomException
 import com.midas.boardservice.repository.ArticleRepository
@@ -125,6 +126,28 @@ class ArticleServiceTest : BehaviorSpec({
             Then("게시글 수를 반환한다.") {
                 actual shouldBe expected
                 verify { articleRepository.count() }
+            }
+        }
+    }
+    Given("게시글 수정 정보를 입력했을 때") {
+        val article = createArticle()
+        val articleDto = ArticleDto(memberDto = MemberDto.from(article.member), title = "new title", content = "new content #spring")
+        val hashtagNames = hashSetOf("spring")
+        every { articleRepository.getReferenceById(any(Long::class)) }.returns(article)
+        every { memberRepository.getReferenceById(any(String::class)) }.returns(createMember())
+        every { hashtagService.deleteHashtagWithoutArticles(any(Long::class)) }.returns(Unit)
+        every { hashtagService.parseHashtagNames(any(String::class)) }.returns(hashtagNames)
+        every { hashtagService.findHashtagsByNames(any()) }.returns(listOf<Hashtag>())
+        When("존재하는 게시글이었을 경우") {
+            articleService.updateArticle(articleDto.articleId?:-1L, articleDto)
+            Then("게시글을 수정한다.") {
+                article.getTitle() shouldBe articleDto.title
+                article.getContent() shouldBe articleDto.content
+                verify { articleRepository.getReferenceById(any(Long::class)) }
+                verify { memberRepository.getReferenceById(any(String::class)) }
+                verify { hashtagService.deleteHashtagWithoutArticles(any(Long::class)) }
+                verify { hashtagService.parseHashtagNames(any(String::class)) }
+                verify { hashtagService.findHashtagsByNames(any()) }
             }
         }
     }

@@ -144,7 +144,34 @@ class ArticleControllerTest : DescribeSpec({
             verify { articleService.getArticleCount() }
         }
     }
-
+    describe("[view][GET] 게시글 수정 페이지") {
+        val articleId = 1L
+        val article = buildArticleDto()
+        every { articleService.getArticle(any(Long::class)) }.returns(article)
+        it("정상 호출") {
+            mvc.perform(get("/articles/${articleId}/form"))
+                .andExpect(status().isOk)
+                .andExpect(view().name("articles/form"))
+                .andExpect(model().attributeExists("article"))
+                .andExpect(model().attribute("formStatus",FormStatus.UPDATE))
+            verify { articleService.getArticle(any(Long::class)) }
+        }
+    }
+    describe("[view][POST] 게시글 수정") {
+        val articleId = 1L
+        val articleRequest = ArticleRequest(title = "updated title", content = "updated content")
+        every { articleService.updateArticle(any(Long::class), any(ArticleDto::class)) }.returns(Unit)
+        it("정상 호출") {
+            mvc.perform(post("/articles/${articleId}/form")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .content(formDataEncoder.encode(articleRequest)!!)
+            )
+                .andExpect(status().is3xxRedirection)
+                .andExpect(view().name("/articles/${articleId}/form"))
+                .andExpect(redirectedUrl("/articles/${articleId}"))
+            verify { articleService.updateArticle(any(Long::class), any(ArticleDto::class)) }
+        }
+    }
 }) {
     companion object {
         fun buildArticleDto(): ArticleDto {

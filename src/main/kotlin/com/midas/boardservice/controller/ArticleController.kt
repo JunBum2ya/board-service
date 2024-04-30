@@ -48,6 +48,9 @@ class ArticleController(private val articleService: ArticleService, private val 
         return "articles/index"
     }
 
+    /**
+     * 게시글 상세 조회 페이지
+     */
     @GetMapping("/{articleId}")
     fun article(@PathVariable articleId: Long, map: ModelMap): String {
         val article = ArticleWithCommentsResponse.from(articleService.getArticleWithComments(articleId))
@@ -58,18 +61,56 @@ class ArticleController(private val articleService: ArticleService, private val 
         return "articles/detail"
     }
 
+    /**
+     * 게시글 등록 페이지
+     */
     @GetMapping("/form")
     fun articleForm(map: ModelMap): String {
         map["formStatus"] = FormStatus.CREATE
         return "articles/form"
     }
 
+    /**
+     * 게시글 등록
+     */
     @PostMapping("/form")
     fun postNewArticle(
         @AuthenticationPrincipal boardPrincipal: BoardPrincipal,
         @Valid articleRequest: ArticleRequest
     ): String {
         articleService.saveArticle(articleRequest.toDto(boardPrincipal.toDto()))
+        return "redirect:/articles"
+    }
+
+    /**
+     * 게시글 수정 페이지
+     */
+    @GetMapping("/{articleId}/form")
+    fun updateArticleForm(@PathVariable articleId: Long, map: ModelMap): String {
+        val article = ArticleResponse.from(articleService.getArticle(articleId))
+        map["article"] = article
+        map["formStatus"] = FormStatus.UPDATE
+        return "articles/form"
+    }
+
+    /**
+     * 게시글 수정
+     */
+    @PostMapping("/{articleId}/form")
+    fun updateArticle(
+        @PathVariable articleId: Long,
+        @AuthenticationPrincipal boardPrincipal: BoardPrincipal,
+        articleRequest: ArticleRequest
+    ): String {
+        articleService.updateArticle(articleId, articleRequest.toDto(boardPrincipal.toDto()))
+        return "redirect:/articles/${articleId}"
+    }
+
+    /**
+     * 게시글 삭제
+     */
+    @PostMapping("/{articleId}/delete")
+    fun deleteArticle(@PathVariable articleId: Long): String {
         return "redirect:/articles"
     }
 }
