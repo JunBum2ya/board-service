@@ -3,6 +3,7 @@ package com.midas.boardservice.repository.querydsl
 import com.midas.boardservice.domain.Article
 import com.midas.boardservice.domain.QArticle
 import com.midas.boardservice.domain.QHashtag
+import com.midas.boardservice.domain.QMember
 import com.midas.boardservice.dto.param.ArticleSearchParam
 import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.dsl.BooleanExpression
@@ -38,6 +39,13 @@ class ArticleRepositoryCustomImpl(private val jpaQueryFactory: JPAQueryFactory) 
             .where(hashtag.hashtagName.`in`(hashtagNames))
         val articles = querydsl!!.applyPagination(pageable, query).fetch()
         return PageImpl(articles, pageable, countQuery.fetch().size.toLong())
+    }
+
+    override fun deleteArticle(articleId: Long, memberId: String) {
+        val article = QArticle.article
+        jpaQueryFactory.delete(article)
+            .where(article.id.eq(articleId).and(article.member.id.eq(memberId)))
+            .execute()
     }
 
     private fun buildWhereClause(param: ArticleSearchParam): BooleanExpression? {

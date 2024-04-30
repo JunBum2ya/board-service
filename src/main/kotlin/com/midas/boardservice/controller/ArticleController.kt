@@ -110,7 +110,8 @@ class ArticleController(private val articleService: ArticleService, private val 
      * 게시글 삭제
      */
     @PostMapping("/{articleId}/delete")
-    fun deleteArticle(@PathVariable articleId: Long): String {
+    fun deleteArticle(@PathVariable articleId: Long, @AuthenticationPrincipal boardPrincipal: BoardPrincipal): String {
+        articleService.deleteArticle(articleId, boardPrincipal.username)
         return "redirect:/articles"
     }
 }

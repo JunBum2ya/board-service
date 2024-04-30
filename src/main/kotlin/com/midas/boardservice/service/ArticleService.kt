@@ -111,8 +111,12 @@ class ArticleService(
     /**
      * 게시글 삭제
      */
-    fun deleteArticle(articleId: Long) {
-        articleRepository.deleteById(articleId)
+    fun deleteArticle(articleId: Long, memberId : String) {
+        val article = articleRepository.getReferenceById(articleId)
+        val hashtagIds = article.hashtags.mapNotNull { it.getId() }.toList()
+        articleRepository.deleteArticle(articleId, memberId)
+        articleRepository.flush()
+        hashtagIds.forEach { hashtagService.deleteHashtagWithoutArticles(it) }
     }
 
     /**

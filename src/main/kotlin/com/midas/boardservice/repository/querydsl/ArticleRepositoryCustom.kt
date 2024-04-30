@@ -9,4 +9,5 @@ import org.springframework.data.domain.Pageable
 interface ArticleRepositoryCustom {
     fun searchArticles(param: ArticleSearchParam, pageable: Pageable): Page<Article>
     fun findByHashtagNames(hashtagNames: Collection<String>, pageable: Pageable): Page<Article>
+    fun deleteArticle(articleId: Long, memberId: String)
 }
