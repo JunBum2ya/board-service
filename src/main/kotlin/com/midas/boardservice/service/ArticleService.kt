@@ -100,8 +100,14 @@ class ArticleService(
     fun updateArticle(articleId: Long, articleData: ArticleDto) {
         try {
             val article = articleRepository.getReferenceById(articleId)
-            article.update(title = articleData.title, content = articleData.content)
-            article.clearHashtags()
+            val member = memberRepository.getReferenceById(articleData.memberDto.id)
+            if(article.member == member) {
+                article.update(title = articleData.title, content = articleData.content)
+                article.clearHashtags()
+            }else {
+                logger.warn("게시글 업데이트 실패. 권한이 없습니다. - {}", articleId)
+                throw CustomException(ResultStatus.UNAUTHENTICATED_USER)
+            }
         } catch (e: EntityNotFoundException) {
             logger.warn("게시글 업데이트 실패. 게시글을 수정하는데 필요한 정보를 찾을 수 없습니다 - {}", e.localizedMessage)
             throw CustomException(ResultStatus.ACCESS_NOT_EXIST_ENTITY, "게시글이 없습니다. - $articleId")

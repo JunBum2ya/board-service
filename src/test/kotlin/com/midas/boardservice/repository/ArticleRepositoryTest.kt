@@ -84,6 +84,21 @@ class ArticleRepositoryTest(
         //when
         val page = articleRepository.searchArticles(param,pageable)
         //then
+        //assertThat(page).isNotEmpty
+        //assertThat(page.size).isEqualTo(10)
+        //assertThat(page.first().hashtags.size).isEqualTo(2)
+    }
+
+    @DisplayName("파라미터와 pageable로 검색을 한다면 article page가 반환된다.")
+    @Test
+    fun givenHashtagNamesAndPageable_whenSearchArticle_thenReturnsArticlePage() {
+        //given
+        initQueryDslTestData()
+        val hashtagNames = listOf("영어", "과학")
+        val pageable = Pageable.ofSize(10)
+        //when
+        val page = articleRepository.findByHashtagNames(hashtagNames,pageable);
+        //then
         assertThat(page).isNotEmpty
         assertThat(page.size).isEqualTo(10)
         assertThat(page.first().hashtags.size).isEqualTo(2)

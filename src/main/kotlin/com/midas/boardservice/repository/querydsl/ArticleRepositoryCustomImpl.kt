@@ -20,9 +20,11 @@ class ArticleRepositoryCustomImpl(private val jpaQueryFactory: JPAQueryFactory) 
     QuerydslRepositorySupport(Article::class.java), ArticleRepositoryCustom {
     override fun searchArticles(param: ArticleSearchParam, pageable: Pageable): Page<Article> {
         val article = QArticle.article
+        val hashtag = QHashtag.hashtag
         val query = jpaQueryFactory.selectFrom(article)
+            .leftJoin(article.hashtags, hashtag)
             .where(buildWhereClause(param))
-        val countQuery = jpaQueryFactory.select(article.count()).from(article).where(buildWhereClause(param))
+        val countQuery = jpaQueryFactory.select(article.count()).leftJoin(hashtag).from(article).where(buildWhereClause(param))
         val articles = querydsl!!.applyPagination(pageable, query).fetch()
         return PageImpl(articles, pageable, countQuery.fetch().size.toLong())
     }

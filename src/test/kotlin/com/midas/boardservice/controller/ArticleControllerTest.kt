@@ -167,7 +167,7 @@ class ArticleControllerTest : DescribeSpec({
                 .content(formDataEncoder.encode(articleRequest)!!)
             )
                 .andExpect(status().is3xxRedirection)
-                .andExpect(view().name("/articles/${articleId}/form"))
+                .andExpect(view().name("redirect:/articles/${articleId}"))
                 .andExpect(redirectedUrl("/articles/${articleId}"))
             verify { articleService.updateArticle(any(Long::class), any(ArticleDto::class)) }
         }
