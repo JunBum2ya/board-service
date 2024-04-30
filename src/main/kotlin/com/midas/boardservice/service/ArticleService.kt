@@ -103,7 +103,15 @@ class ArticleService(
             val member = memberRepository.getReferenceById(articleData.memberDto.id)
             if(article.member == member) {
                 article.update(title = articleData.title, content = articleData.content)
+                val hashtagIds = article.hashtags.mapNotNull { it.getId() }
                 article.clearHashtags()
+                articleRepository.flush()
+
+                hashtagIds.forEach { hashtagService.deleteHashtagWithoutArticles(it) }
+
+                val hashtags = renewHashtagsFromContent(articleData.content)
+                article.addHashtags(hashtags)
+
             }else {
                 logger.warn("게시글 업데이트 실패. 권한이 없습니다. - {}", articleId)
                 throw CustomException(ResultStatus.UNAUTHENTICATED_USER)

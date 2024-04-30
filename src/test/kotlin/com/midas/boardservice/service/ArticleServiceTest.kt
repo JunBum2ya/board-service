@@ -138,6 +138,7 @@ class ArticleServiceTest : BehaviorSpec({
         every { hashtagService.deleteHashtagWithoutArticles(any(Long::class)) }.returns(Unit)
         every { hashtagService.parseHashtagNames(any(String::class)) }.returns(hashtagNames)
         every { hashtagService.findHashtagsByNames(any()) }.returns(listOf<Hashtag>())
+        every { articleRepository.flush() }.returns(Unit)
         When("존재하는 게시글이었을 경우") {
             articleService.updateArticle(articleDto.articleId?:-1L, articleDto)
             Then("게시글을 수정한다.") {
@@ -148,13 +149,17 @@ class ArticleServiceTest : BehaviorSpec({
                 verify { hashtagService.deleteHashtagWithoutArticles(any(Long::class)) }
                 verify { hashtagService.parseHashtagNames(any(String::class)) }
                 verify { hashtagService.findHashtagsByNames(any()) }
+                verify { articleRepository.flush() }
             }
         }
     }
 }) {
     companion object {
         fun createArticle(): Article {
-            return Article(id = 1L, member = createMember(), title = "title", content = "content")
+            val article =  Article(id = 1L, member = createMember(), title = "title", content = "content")
+            article.addHashtag(Hashtag(id = 1L, hashtagName = "kotlin"))
+            article.addHashtag(Hashtag(id = 2L, hashtagName = "spring"))
+            return article
         }
 
         fun createMember(): Member {
