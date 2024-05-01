@@ -100,8 +100,7 @@ class ArticleService(
     fun updateArticle(articleId: Long, articleData: ArticleDto) {
         try {
             val article = articleRepository.getReferenceById(articleId)
-            val member = memberRepository.getReferenceById(articleData.memberDto.id)
-            if(article.member == member) {
+            if(article.member.getId() == articleData.memberDto.id) {
                 article.update(title = articleData.title, content = articleData.content)
                 val hashtagIds = article.hashtags.mapNotNull { it.getId() }
                 article.clearHashtags()

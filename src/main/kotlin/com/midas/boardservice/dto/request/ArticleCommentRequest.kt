@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull
 
 data class ArticleCommentRequest(
     @field:NotNull(message = "게시글 아이디를 입력하세요.") val articleId: Long?,
-    val parentCommentId: Long?,
+    val parentCommentId: Long? = null,
     @field:NotEmpty(message = "게시글 본문을 입력하세요.") val content: String?
 ) {
 
@@ -17,7 +17,7 @@ data class ArticleCommentRequest(
     fun toDto(memberDto: MemberDto): ArticleCommentDto {
         return ArticleCommentDto(
             articleId = articleId ?: throw CustomException(ResultStatus.NOT_VALID_REQUEST),
-            parentCommentId = parentCommentId ?: throw CustomException(ResultStatus.NOT_VALID_REQUEST),
+            parentCommentId = parentCommentId,
             content = content ?: throw CustomException(ResultStatus.NOT_VALID_REQUEST),
             member = memberDto
         )
