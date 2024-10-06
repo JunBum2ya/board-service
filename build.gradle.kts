@@ -62,7 +62,6 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-    implementation("com.azure.spring:spring-cloud-azure-starter-active-directory")
     // kotest
     testImplementation("io.kotest:kotest-runner-junit5:5.4.2")
     testImplementation("io.kotest:kotest-assertions-core:5.4.2")
