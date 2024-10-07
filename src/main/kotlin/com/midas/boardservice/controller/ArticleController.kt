@@ -39,7 +39,6 @@ class ArticleController(private val articleService: ArticleService, private val 
     ): String {
         val articles = articleService.searchArticles(searchType, searchText, pageable).map { ArticleResponse.from(it) }
         val barNumbers = paginationService.getPaginationBarNumbers(articles.number, articles.totalPages)
-
         map["articles"] = articles
         map["paginationBarNumbers"] = barNumbers
         map["searchTypes"] = SearchType.entries.toTypedArray()

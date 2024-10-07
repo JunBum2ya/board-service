@@ -35,8 +35,7 @@ class SecurityConfig {
             .authorizeHttpRequests {
                 it.requestMatchers(
                     PathRequest.toStaticResources().atCommonLocations()
-                ).permitAll()
-                    .anyRequest().authenticated()
+                ).permitAll().anyRequest().authenticated()
             }
             .formLogin(withDefaults())
             .logout { logout -> logout.logoutSuccessUrl("/") }
