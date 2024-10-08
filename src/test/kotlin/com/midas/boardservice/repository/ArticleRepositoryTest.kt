@@ -1,14 +1,12 @@
 package com.midas.boardservice.repository
 
-import com.midas.boardservice.config.JpaConfig
 import com.midas.boardservice.config.TestJpaConfig
 import com.midas.boardservice.domain.Article
 import com.midas.boardservice.domain.ArticleComment
 import com.midas.boardservice.domain.Hashtag
-import com.midas.boardservice.domain.Member
+import com.midas.boardservice.member.domain.Member
 import com.midas.boardservice.dto.param.ArticleSearchParam
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.InstanceOfAssertFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

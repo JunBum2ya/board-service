@@ -1,7 +1,7 @@
 package com.midas.boardservice.controller
 
 import com.midas.boardservice.dto.request.ArticleCommentRequest
-import com.midas.boardservice.dto.security.BoardPrincipal
+import com.midas.boardservice.member.dto.security.BoardPrincipal
 import com.midas.boardservice.service.ArticleCommentService
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotNull

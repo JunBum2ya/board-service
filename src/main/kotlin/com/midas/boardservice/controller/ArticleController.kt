@@ -5,7 +5,7 @@ import com.midas.boardservice.domain.contant.SearchType
 import com.midas.boardservice.dto.request.ArticleRequest
 import com.midas.boardservice.dto.response.ArticleResponse
 import com.midas.boardservice.dto.response.ArticleWithCommentsResponse
-import com.midas.boardservice.dto.security.BoardPrincipal
+import com.midas.boardservice.member.dto.security.BoardPrincipal
 import com.midas.boardservice.service.ArticleService
 import com.midas.boardservice.service.PaginationService
 import jakarta.validation.Valid

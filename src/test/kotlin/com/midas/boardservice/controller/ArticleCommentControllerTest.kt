@@ -1,11 +1,8 @@
 package com.midas.boardservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.midas.boardservice.domain.ArticleComment
-import com.midas.boardservice.domain.Member
 import com.midas.boardservice.dto.ArticleCommentDto
-import com.midas.boardservice.dto.MemberDto
-import com.midas.boardservice.dto.request.ArticleCommentRequest
+import com.midas.boardservice.member.dto.MemberDto
 import com.midas.boardservice.service.ArticleCommentService
 import com.midas.boardservice.util.FormDataEncoder
 import com.midas.boardservice.util.TestAuthenticationPrincipal

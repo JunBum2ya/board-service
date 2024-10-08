@@ -1,7 +1,7 @@
 package com.midas.boardservice.dto
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.midas.boardservice.dto.security.KakaoOAuth2Response
+import com.midas.boardservice.member.dto.security.KakaoOAuth2Response
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.maps.shouldContain
 import io.kotest.matchers.shouldBe

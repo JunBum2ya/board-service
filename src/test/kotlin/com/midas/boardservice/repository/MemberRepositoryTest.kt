@@ -1,7 +1,7 @@
 package com.midas.boardservice.repository
 
 import com.midas.boardservice.config.TestJpaConfig
-import com.midas.boardservice.domain.Member
+import com.midas.boardservice.member.domain.Member
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName

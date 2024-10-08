@@ -1,10 +1,12 @@
 package com.midas.boardservice.config
 
 import com.midas.boardservice.domain.contant.ResultStatus
-import com.midas.boardservice.dto.MemberDto
-import com.midas.boardservice.dto.security.BoardPrincipal
-import com.midas.boardservice.dto.security.KakaoOAuth2Response
+import com.midas.boardservice.member.dto.MemberDto
+import com.midas.boardservice.member.dto.security.BoardPrincipal
+import com.midas.boardservice.member.dto.security.KakaoOAuth2Response
+import com.midas.boardservice.member.dto.security.OAuth2BoardPrincipal
 import com.midas.boardservice.exception.CustomException
+import com.midas.boardservice.member.service.CustomOidcService
 import com.midas.boardservice.service.MemberService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest
@@ -15,6 +17,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService
@@ -39,7 +42,12 @@ class SecurityConfig {
             }
             .formLogin(withDefaults())
             .logout { logout -> logout.logoutSuccessUrl("/") }
-            .oauth2Login { oAuth -> oAuth.userInfoEndpoint { userService -> userService.userService(oAuth2UserService) } }
+            .oauth2Login { oAuth ->
+                oAuth.userInfoEndpoint { userService ->
+                    userService
+                        .userService(oAuth2UserService)
+                }
+            }
             .build()
     }
 
@@ -67,8 +75,8 @@ class SecurityConfig {
             val username = registrationId + "_" + providerId
             val dummyPassword = passwordEncoder.encode("{bcrypt}" + UUID.randomUUID())
             memberService.searchMember(username)
-                ?.let { BoardPrincipal.from(it) }
-                ?: BoardPrincipal.from(
+                ?.let { OAuth2BoardPrincipal.from(it) }
+                ?: OAuth2BoardPrincipal.from(
                     memberService.saveMember(
                         MemberDto(
                             id = username,

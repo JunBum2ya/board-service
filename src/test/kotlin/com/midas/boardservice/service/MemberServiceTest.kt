@@ -1,11 +1,10 @@
 package com.midas.boardservice.service
 
-import com.midas.boardservice.domain.Member
-import com.midas.boardservice.dto.MemberDto
+import com.midas.boardservice.member.domain.Member
+import com.midas.boardservice.member.dto.MemberDto
 import com.midas.boardservice.repository.MemberRepository
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldHave
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk

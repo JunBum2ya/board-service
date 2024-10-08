@@ -3,7 +3,6 @@ package com.midas.boardservice.repository.querydsl
 import com.midas.boardservice.domain.Article
 import com.midas.boardservice.domain.QArticle
 import com.midas.boardservice.domain.QHashtag
-import com.midas.boardservice.domain.QMember
 import com.midas.boardservice.dto.param.ArticleSearchParam
 import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.dsl.BooleanExpression
