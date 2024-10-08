@@ -2,21 +2,18 @@ package com.midas.boardservice.service
 
 import com.midas.boardservice.domain.Article
 import com.midas.boardservice.domain.Hashtag
-import com.midas.boardservice.domain.Member
+import com.midas.boardservice.member.domain.Member
 import com.midas.boardservice.domain.contant.ResultStatus
 import com.midas.boardservice.domain.contant.SearchType
 import com.midas.boardservice.dto.ArticleDto
-import com.midas.boardservice.dto.MemberDto
+import com.midas.boardservice.member.dto.MemberDto
 import com.midas.boardservice.dto.param.ArticleSearchParam
 import com.midas.boardservice.exception.CustomException
 import com.midas.boardservice.repository.ArticleRepository
 import com.midas.boardservice.repository.MemberRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.matchers.collections.shouldHaveSize
-import io.kotest.matchers.collections.shouldNotHaveSize
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldHave
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
@@ -25,7 +22,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
-import java.util.*
 
 class ArticleServiceTest : BehaviorSpec({
 

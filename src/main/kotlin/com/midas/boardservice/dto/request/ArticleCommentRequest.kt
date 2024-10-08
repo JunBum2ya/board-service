@@ -2,7 +2,7 @@ package com.midas.boardservice.dto.request
 
 import com.midas.boardservice.domain.contant.ResultStatus
 import com.midas.boardservice.dto.ArticleCommentDto
-import com.midas.boardservice.dto.MemberDto
+import com.midas.boardservice.member.dto.MemberDto
 import com.midas.boardservice.exception.CustomException
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull

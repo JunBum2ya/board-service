@@ -1,6 +1,6 @@
-package com.midas.boardservice.dto
+package com.midas.boardservice.member.dto
 
-import com.midas.boardservice.domain.Member
+import com.midas.boardservice.member.domain.Member
 import java.time.LocalDateTime
 
 data class MemberDto(

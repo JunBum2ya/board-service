@@ -1,20 +1,20 @@
-package com.midas.boardservice.dto.security
+package com.midas.boardservice.member.dto.security
 
-import com.midas.boardservice.dto.MemberDto
+import com.midas.boardservice.member.dto.MemberDto
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.oauth2.core.user.OAuth2User
 
-data class BoardPrincipal(
+open class BoardPrincipal(
     private val username: String,
     private val password: String,
     private val authorities: Collection<out GrantedAuthority>,
-    val email: String,
+    open val email: String,
     val nickname: String,
-    val memo: String?,
-    val oAuth2Attributes: Map<String, Any>
-) : UserDetails, OAuth2User {
+    val memo: String? = null
+) : UserDetails {
+
+    private val serialVersionUID = -6540413933065927596
 
     companion object {
         fun from(member: MemberDto): BoardPrincipal {
@@ -25,22 +25,13 @@ data class BoardPrincipal(
                 authorities = authorities,
                 email = member.email,
                 nickname = member.nickname,
-                memo = member.memo,
-                oAuth2Attributes = mapOf()
+                memo = member.memo
             )
         }
     }
 
     fun toDto(): MemberDto {
         return MemberDto(id = username, password = password, email = email, nickname = nickname, memo = memo)
-    }
-
-    override fun getName(): String {
-        return this.username
-    }
-
-    override fun getAttributes(): Map<String, Any> {
-        return this.oAuth2Attributes
     }
 
     override fun getAuthorities(): Collection<out GrantedAuthority> {

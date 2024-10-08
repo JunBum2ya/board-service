@@ -1,7 +1,6 @@
 package com.midas.boardservice.service
 
-import com.midas.boardservice.domain.Member
-import com.midas.boardservice.dto.MemberDto
+import com.midas.boardservice.member.dto.MemberDto
 import com.midas.boardservice.repository.MemberRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service

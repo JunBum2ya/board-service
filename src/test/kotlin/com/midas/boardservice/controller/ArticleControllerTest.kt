@@ -2,42 +2,34 @@ package com.midas.boardservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.midas.boardservice.domain.Article
-import com.midas.boardservice.domain.Member
+import com.midas.boardservice.member.domain.Member
 import com.midas.boardservice.domain.contant.FormStatus
 import com.midas.boardservice.domain.contant.SearchType
 import com.midas.boardservice.dto.ArticleDto
 import com.midas.boardservice.dto.ArticleWithCommentsDto
-import com.midas.boardservice.dto.MemberDto
+import com.midas.boardservice.member.dto.MemberDto
 import com.midas.boardservice.dto.request.ArticleRequest
-import com.midas.boardservice.dto.security.BoardPrincipal
 import com.midas.boardservice.service.ArticleService
 import com.midas.boardservice.service.PaginationService
 import com.midas.boardservice.util.FormDataEncoder
 import com.midas.boardservice.util.TestAuthenticationPrincipal
-import io.kotest.assertions.any
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.mockito.BDDMockito.any
-import org.mockito.BDDMockito.given
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver
 import org.springframework.http.MediaType
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.test.context.support.TestExecutionEvent
-import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.security.test.context.support.WithUserDetails
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import java.security.Principal
 
 
 @WithUserDetails(value = "unoTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)
