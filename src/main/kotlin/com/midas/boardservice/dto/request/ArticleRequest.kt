@@ -1,6 +1,6 @@
 package com.midas.boardservice.dto.request
 
-import com.midas.boardservice.domain.contant.ResultStatus
+import com.midas.boardservice.common.domain.constant.ResultStatus
 import com.midas.boardservice.dto.ArticleDto
 import com.midas.boardservice.member.dto.MemberDto
 import com.midas.boardservice.exception.CustomException

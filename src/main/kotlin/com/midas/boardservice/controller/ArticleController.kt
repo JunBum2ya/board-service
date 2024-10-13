@@ -7,12 +7,11 @@ import com.midas.boardservice.dto.response.ArticleResponse
 import com.midas.boardservice.dto.response.ArticleWithCommentsResponse
 import com.midas.boardservice.member.dto.security.BoardPrincipal
 import com.midas.boardservice.service.ArticleService
-import com.midas.boardservice.service.PaginationService
+import com.midas.boardservice.common.service.PaginationService
 import jakarta.validation.Valid
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
-import org.springframework.security.core.Authentication
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap

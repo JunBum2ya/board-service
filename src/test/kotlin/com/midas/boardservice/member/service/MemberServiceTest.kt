@@ -1,5 +1,6 @@
-package com.midas.boardservice.service
+package com.midas.boardservice.member.service
 
+import com.midas.boardservice.common.component.JwtTokenProvider
 import com.midas.boardservice.member.domain.Member
 import com.midas.boardservice.member.dto.MemberDto
 import com.midas.boardservice.repository.MemberRepository
@@ -10,10 +11,13 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.security.crypto.password.PasswordEncoder
 
 class MemberServiceTest : BehaviorSpec({
     val memberRepository = mockk<MemberRepository>()
-    val memberService = MemberService(memberRepository)
+    val passwordEncoder = mockk<PasswordEncoder>()
+    val jwtTokenProvider = mockk<JwtTokenProvider>()
+    val memberService = MemberService(memberRepository, passwordEncoder, jwtTokenProvider)
 
     Given("회원 ID가 주어졌을 때") {
         val memberId = "testUser"

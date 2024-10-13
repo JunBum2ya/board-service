@@ -1,6 +1,6 @@
 package com.midas.boardservice.service
 
-import com.midas.boardservice.domain.contant.ResultStatus
+import com.midas.boardservice.common.domain.constant.ResultStatus
 import com.midas.boardservice.dto.ArticleCommentDto
 import com.midas.boardservice.exception.CustomException
 import com.midas.boardservice.repository.ArticleCommentRepository
@@ -8,9 +8,6 @@ import com.midas.boardservice.repository.ArticleRepository
 import com.midas.boardservice.repository.MemberRepository
 import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

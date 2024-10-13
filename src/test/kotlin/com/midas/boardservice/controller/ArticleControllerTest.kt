@@ -10,7 +10,7 @@ import com.midas.boardservice.dto.ArticleWithCommentsDto
 import com.midas.boardservice.member.dto.MemberDto
 import com.midas.boardservice.dto.request.ArticleRequest
 import com.midas.boardservice.service.ArticleService
-import com.midas.boardservice.service.PaginationService
+import com.midas.boardservice.common.service.PaginationService
 import com.midas.boardservice.util.FormDataEncoder
 import com.midas.boardservice.util.TestAuthenticationPrincipal
 import io.kotest.core.spec.style.DescribeSpec

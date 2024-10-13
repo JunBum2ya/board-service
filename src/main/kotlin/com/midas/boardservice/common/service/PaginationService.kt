@@ -1,4 +1,4 @@
-package com.midas.boardservice.service
+package com.midas.boardservice.common.service
 
 import org.springframework.stereotype.Service
 import java.util.stream.Collectors
