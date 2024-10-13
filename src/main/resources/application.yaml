@@ -51,7 +51,10 @@ spring:
             user-name-attribute: id
           azure:
             issuer-uri: https://login.microsoftonline.com/${AZURE_AD_TANENT_ID}/v2.0
-
+jwt:
+  header: Authorization
+  secret: a2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbQ==
+  access-token-validity-in-seconds: 1800
 
 ---
 

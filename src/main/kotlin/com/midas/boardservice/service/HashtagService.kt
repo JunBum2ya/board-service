@@ -1,7 +1,7 @@
 package com.midas.boardservice.service
 
 import com.midas.boardservice.domain.Hashtag
-import com.midas.boardservice.domain.contant.ResultStatus
+import com.midas.boardservice.common.domain.constant.ResultStatus
 import com.midas.boardservice.exception.CustomException
 import com.midas.boardservice.repository.HashtagRepository
 import jakarta.persistence.EntityNotFoundException

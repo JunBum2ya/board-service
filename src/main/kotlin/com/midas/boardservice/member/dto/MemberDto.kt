@@ -31,6 +31,10 @@ data class MemberDto(
     }
 
     fun toEntity(): Member {
+        return this.toEntity(this.password)
+    }
+
+    fun toEntity(password: String): Member {
         return Member(id = id, email = email, nickname = nickname, password = password, memo = memo)
     }
 }

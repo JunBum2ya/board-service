@@ -1,5 +1,6 @@
 package com.midas.boardservice.domain
 
+import com.midas.boardservice.common.domain.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue

@@ -1,13 +1,12 @@
 package com.midas.boardservice.config
 
-import com.midas.boardservice.domain.contant.ResultStatus
+import com.midas.boardservice.common.domain.constant.ResultStatus
 import com.midas.boardservice.member.dto.MemberDto
 import com.midas.boardservice.member.dto.security.BoardPrincipal
 import com.midas.boardservice.member.dto.security.KakaoOAuth2Response
 import com.midas.boardservice.member.dto.security.OAuth2BoardPrincipal
 import com.midas.boardservice.exception.CustomException
-import com.midas.boardservice.member.service.CustomOidcService
-import com.midas.boardservice.service.MemberService
+import com.midas.boardservice.member.service.MemberService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest
 import org.springframework.context.annotation.Bean
@@ -38,7 +37,9 @@ class SecurityConfig {
             .authorizeHttpRequests {
                 it.requestMatchers(
                     PathRequest.toStaticResources().atCommonLocations()
-                ).permitAll().anyRequest().authenticated()
+                ).permitAll()
+                    .requestMatchers("/api/members/login", "/api/members/join").permitAll()
+                    .anyRequest().authenticated()
             }
             .formLogin(withDefaults())
             .logout { logout -> logout.logoutSuccessUrl("/") }

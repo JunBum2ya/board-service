@@ -1,6 +1,6 @@
 package com.midas.boardservice.dto.response
 
-import com.midas.boardservice.domain.contant.ResultStatus
+import com.midas.boardservice.common.domain.constant.ResultStatus
 import com.midas.boardservice.dto.ArticleDto
 import com.midas.boardservice.exception.CustomException
 import java.time.LocalDateTime

@@ -1,5 +1,6 @@
 package com.midas.boardservice.domain
 
+import com.midas.boardservice.common.domain.BaseEntity
 import com.midas.boardservice.member.domain.Member
 import jakarta.persistence.*
 

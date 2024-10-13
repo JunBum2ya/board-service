@@ -3,7 +3,7 @@ package com.midas.boardservice.dto
 import com.midas.boardservice.domain.Article
 import com.midas.boardservice.domain.ArticleComment
 import com.midas.boardservice.member.domain.Member
-import com.midas.boardservice.domain.contant.ResultStatus
+import com.midas.boardservice.common.domain.constant.ResultStatus
 import com.midas.boardservice.exception.CustomException
 import com.midas.boardservice.member.dto.MemberDto
 import java.time.LocalDateTime

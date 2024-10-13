@@ -1,4 +1,4 @@
-package com.midas.boardservice.domain.contant
+package com.midas.boardservice.common.domain.constant
 
 enum class ResultStatus(val code: String, val message: String) {
     SUCCESS(code = "200", "success"),

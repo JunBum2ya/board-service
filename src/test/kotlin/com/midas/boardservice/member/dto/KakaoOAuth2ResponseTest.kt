@@ -1,4 +1,4 @@
-package com.midas.boardservice.dto
+package com.midas.boardservice.member.dto
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.midas.boardservice.member.dto.security.KakaoOAuth2Response

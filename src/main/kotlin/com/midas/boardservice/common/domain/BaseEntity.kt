@@ -1,4 +1,4 @@
-package com.midas.boardservice.domain
+package com.midas.boardservice.common.domain
 
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners
