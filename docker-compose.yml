@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  board-service-database:
+    image: postgres:latest
+    container_name: board-service-database
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DATASOURCE_DATABASE}  # 데이터베이스 이름
+      POSTGRES_USER: ${DATASOURCE_USERNAME}    # 사용자 이름
+      POSTGRES_PASSWORD: ${DATASOURCE_PASSWORD}  # 사용자 비밀번호
+    ports:
+      - "15432:5432"  # 호스트 포트:컨테이너 포트
+    volumes:
+      - C:/leejunbum/docker/postgres/data:/var/lib/mysql:rw  # 데이터 볼륨 마운트
+  board-service-app:
+    container_name: board-service-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - board-service-database
+    image: 22cun2/board-service-app:latest
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DATASOURCE_PASSWORD}
+      KAKAO_OAUTH_CLIENT_ID: ${KAKAO_OAUTH_CLIENT_ID}
+      KAKAO_OAUTH_CLIENT_SECRET: ${KAKAO_OAUTH_CLIENT_SECRET}
+      AZURE_AD_CLIENT_ID: ${AZURE_AD_CLIENT_ID}
+      AZURE_AD_CLIENT_SECRET: ${AZURE_AD_CLIENT_SECRET}
+      AZURE_AD_TANENT_ID: ${AZURE_AD_TANENT_ID}
+      JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - "443:8443"
+      - "80:8080"
+    restart: always

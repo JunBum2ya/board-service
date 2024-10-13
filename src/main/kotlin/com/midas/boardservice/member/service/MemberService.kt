@@ -37,7 +37,7 @@ class MemberService(
     fun login(userId: String, password: String): MemberAuthenticationDto {
         //사용자 조회
         val member = memberRepository.findByIdOrNull(userId) ?: throw CustomException(ResultStatus.UNAUTHENTICATED_USER)
-        if (!passwordEncoder.matches(member.getPassword(), password)) {
+        if (!passwordEncoder.matches(password, member.getPassword())) {
             //패스워드 검증
             throw CustomException(ResultStatus.UNAUTHENTICATED_USER)
         }

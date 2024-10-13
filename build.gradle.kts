@@ -31,7 +31,7 @@ version = "0.0.1-SNAPSHOT"
 val queryDslVersion = "5.0.0" // QueryDSL Version Setting
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
 }
 
 configurations {
@@ -82,7 +82,7 @@ dependencies {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs += "-Xjsr305=strict"
-        jvmTarget = "17"
+        jvmTarget = "21"
     }
 }
 
@@ -99,4 +99,8 @@ idea {
         sourceDirs.add(kaptMain)
         generatedSourceDirs.add(kaptMain)
     }
+}
+
+tasks.bootJar {
+    archiveFileName = "app.jar"
 }
