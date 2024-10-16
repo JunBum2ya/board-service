@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.Customizer.withDefaults
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -41,14 +42,7 @@ class SecurityConfig {
                     .requestMatchers("/api/members/login", "/api/members/join").permitAll()
                     .anyRequest().authenticated()
             }
-            .formLogin(withDefaults())
-            .logout { logout -> logout.logoutSuccessUrl("/") }
-            .oauth2Login { oAuth ->
-                oAuth.userInfoEndpoint { userService ->
-                    userService
-                        .userService(oAuth2UserService)
-                }
-            }
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .build()
     }
 
