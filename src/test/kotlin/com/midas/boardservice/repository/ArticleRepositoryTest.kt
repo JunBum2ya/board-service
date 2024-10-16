@@ -6,6 +6,7 @@ import com.midas.boardservice.domain.ArticleComment
 import com.midas.boardservice.domain.Hashtag
 import com.midas.boardservice.member.domain.Member
 import com.midas.boardservice.dto.param.ArticleSearchParam
+import com.midas.boardservice.member.repository.MemberRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName

@@ -1,9 +1,10 @@
 package com.midas.boardservice.member.service
 
 import com.midas.boardservice.common.component.JwtTokenProvider
+import com.midas.boardservice.mail.service.MailService
 import com.midas.boardservice.member.domain.Member
 import com.midas.boardservice.member.dto.MemberDto
-import com.midas.boardservice.repository.MemberRepository
+import com.midas.boardservice.member.repository.MemberRepository
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -17,7 +18,8 @@ class MemberServiceTest : BehaviorSpec({
     val memberRepository = mockk<MemberRepository>()
     val passwordEncoder = mockk<PasswordEncoder>()
     val jwtTokenProvider = mockk<JwtTokenProvider>()
-    val memberService = MemberService(memberRepository, passwordEncoder, jwtTokenProvider)
+    val mailService = mockk<MailService>()
+    val memberService = MemberService(memberRepository, passwordEncoder, jwtTokenProvider, mailService)
 
     Given("회원 ID가 주어졌을 때") {
         val memberId = "testUser"
