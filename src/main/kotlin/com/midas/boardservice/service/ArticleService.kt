@@ -8,7 +8,7 @@ import com.midas.boardservice.dto.ArticleWithCommentsDto
 import com.midas.boardservice.dto.param.ArticleSearchParam
 import com.midas.boardservice.exception.CustomException
 import com.midas.boardservice.repository.ArticleRepository
-import com.midas.boardservice.repository.MemberRepository
+import com.midas.boardservice.member.repository.MemberRepository
 import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page

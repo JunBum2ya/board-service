@@ -5,7 +5,7 @@ import com.midas.boardservice.dto.ArticleCommentDto
 import com.midas.boardservice.exception.CustomException
 import com.midas.boardservice.repository.ArticleCommentRepository
 import com.midas.boardservice.repository.ArticleRepository
-import com.midas.boardservice.repository.MemberRepository
+import com.midas.boardservice.member.repository.MemberRepository
 import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service

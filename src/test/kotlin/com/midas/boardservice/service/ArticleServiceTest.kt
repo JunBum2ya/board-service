@@ -10,7 +10,7 @@ import com.midas.boardservice.member.dto.MemberDto
 import com.midas.boardservice.dto.param.ArticleSearchParam
 import com.midas.boardservice.exception.CustomException
 import com.midas.boardservice.repository.ArticleRepository
-import com.midas.boardservice.repository.MemberRepository
+import com.midas.boardservice.member.repository.MemberRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe

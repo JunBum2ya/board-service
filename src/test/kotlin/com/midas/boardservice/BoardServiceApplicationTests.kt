@@ -10,6 +10,7 @@ import org.springframework.test.context.TestPropertySource
 @SpringBootTest
 @ActiveProfiles("testdb")
 @Import(TestSecurityConfig::class)
+@TestPropertySource(properties = ["AZURE_EMAIL_APP=AZURE-APP", "AZURE_EMAIL_ACCESS_KEY=1234", "AZURE_EMAIL_SENDER=test@test.com"])
 class BoardServiceApplicationTests {
 
     @Test

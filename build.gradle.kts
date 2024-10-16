@@ -77,6 +77,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.0.5")
     implementation("com.infobip:infobip-spring-data-jpa-querydsl-boot-starter:8.1.1")
     kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
+    // azure email library
+    implementation("com.azure:azure-communication-email:1.0.17")
+
 }
 
 tasks.withType<KotlinCompile> {

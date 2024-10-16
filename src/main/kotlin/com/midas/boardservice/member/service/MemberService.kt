@@ -3,11 +3,13 @@ package com.midas.boardservice.member.service
 import com.midas.boardservice.common.component.JwtTokenProvider
 import com.midas.boardservice.common.domain.constant.ResultStatus
 import com.midas.boardservice.exception.CustomException
+import com.midas.boardservice.mail.dto.MailRequest
+import com.midas.boardservice.mail.service.MailService
 import com.midas.boardservice.member.domain.Member
 import com.midas.boardservice.member.dto.MemberAuthenticationDto
 import com.midas.boardservice.member.dto.MemberDto
 import com.midas.boardservice.member.dto.security.JwtBoardPrincipal
-import com.midas.boardservice.repository.MemberRepository
+import com.midas.boardservice.member.repository.MemberRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -23,7 +25,8 @@ import java.util.*
 class MemberService(
     private val memberRepository: MemberRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val jwtTokenProvider: JwtTokenProvider
+    private val jwtTokenProvider: JwtTokenProvider,
+    private val mailService: MailService
 ) {
     /**\
      * 회원 조회
@@ -52,6 +55,14 @@ class MemberService(
         }
         val member = memberRepository.save(memberDto.toEntity(password = passwordEncoder.encode(memberDto.password)))
         val authentication = this.authenticateMember(member)
+
+        val mailRequest = MailRequest(
+            title = "회원가입이 되었습니다.",
+            content = "${member.getNickname()}님! 진심으로 환영합니다.",
+            recipients = listOf(member.getEmail())
+        )
+        mailService.sendMessage(mailRequest)
+
         return authentication
     }
 
@@ -80,7 +91,7 @@ class MemberService(
 
         //access 토큰 발급
         val accessToken = jwtTokenProvider.generateToken(principal)
-        
+
         return MemberAuthenticationDto(
             username = principal.username,
             accessToken = accessToken,
