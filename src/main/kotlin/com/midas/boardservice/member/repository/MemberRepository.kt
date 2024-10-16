@@ -1,4 +1,4 @@
-package com.midas.boardservice.repository;
+package com.midas.boardservice.member.repository;
 
 import com.midas.boardservice.member.domain.Member
 import org.springframework.data.jpa.repository.JpaRepository
