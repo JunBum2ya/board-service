@@ -23,6 +23,8 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.web.servlet.config.annotation.CorsRegistry
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import java.util.*
 
 @Configuration
@@ -44,6 +46,17 @@ class SecurityConfig {
             }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .build()
+    }
+
+    @Bean
+    fun corsConfigurer(): WebMvcConfigurer {
+        return object : WebMvcConfigurer {
+            override fun addCorsMappings(registry: CorsRegistry) {
+                registry.addMapping("/**")
+                    .allowedOrigins("http://localhost:3000")
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            }
+        }
     }
 
     @Bean
