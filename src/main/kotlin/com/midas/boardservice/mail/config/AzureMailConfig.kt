@@ -14,7 +14,7 @@ class AzureMailConfig(
 ) {
 
     @Bean
-    fun emailSyncClient(): EmailAsyncClient {
+    fun emailAsyncClient(): EmailAsyncClient {
         val endpoint = "https://${appName}-communication.korea.communication.azure.com"
         val azureKeyCredential = AzureKeyCredential(accessKey)
         return EmailClientBuilder()

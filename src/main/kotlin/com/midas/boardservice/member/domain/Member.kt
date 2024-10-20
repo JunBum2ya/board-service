@@ -14,20 +14,24 @@ class Member(
     @Column(nullable = false, length = 30) @Comment("닉네임") private var nickname: String,
     @Column(nullable = false) @Comment("패스워드") private var password: String,
     private var memo: String? = null
-): BaseEntity() {
+) : BaseEntity() {
 
     fun getId(): String {
         return this.id
     }
+
     fun getEmail(): String {
         return this.email
     }
+
     fun getNickname(): String {
         return this.nickname
     }
+
     fun getPassword(): String {
         return this.password
     }
+
     fun getMemo(): String? {
         return this.memo
     }
@@ -47,6 +51,7 @@ class Member(
     fun updatePassword(password: String, passwordEncoder: PasswordEncoder) {
         this.password = passwordEncoder.encode(password)
     }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

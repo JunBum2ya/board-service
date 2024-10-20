@@ -50,7 +50,7 @@ class MemberService(
 
     @Transactional
     fun join(memberDto: MemberDto): MemberAuthenticationDto {
-        if (memberRepository.findByIdOrNull(memberDto.id) != null) {
+        if (memberRepository.findByIdOrNull(memberDto.id) != null && memberRepository.findMemberByEmail(memberDto.email) != null) {
             throw CustomException(ResultStatus.DUPLICATE_UNIQUE_PROPERTY)
         }
         val member = memberRepository.save(memberDto.toEntity(password = passwordEncoder.encode(memberDto.password)))
