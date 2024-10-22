@@ -1,4 +1,4 @@
-package com.midas.boardservice.member.dto.security
+package com.midas.boardservice.security.dto
 
 import com.midas.boardservice.member.dto.MemberDto
 import org.springframework.security.core.GrantedAuthority

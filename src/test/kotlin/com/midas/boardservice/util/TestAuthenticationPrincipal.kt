@@ -1,7 +1,7 @@
 package com.midas.boardservice.util
 
 import com.midas.boardservice.member.dto.MemberDto
-import com.midas.boardservice.member.dto.security.BoardPrincipal
+import com.midas.boardservice.security.dto.BoardPrincipal
 import org.springframework.core.MethodParameter
 import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest

@@ -22,5 +22,8 @@ class CommonResponse<T>(val code: String, val message: String, val data: T? = nu
         fun of(code: String, message: String): CommonResponse<Any> {
             return CommonResponse(code = code, message = message)
         }
+        fun <T> of(code: String, message: String,  data: T): CommonResponse<T> {
+            return CommonResponse(code = code, message = message, data = data)
+        }
     }
 }

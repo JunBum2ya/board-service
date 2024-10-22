@@ -1,7 +1,8 @@
-package com.midas.boardservice.member.service
+package com.midas.boardservice.security.service
 
 import com.midas.boardservice.member.dto.MemberDto
-import com.midas.boardservice.member.dto.security.OidcBoardPrincipal
+import com.midas.boardservice.security.dto.OidcBoardPrincipal
+import com.midas.boardservice.member.service.MemberService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService

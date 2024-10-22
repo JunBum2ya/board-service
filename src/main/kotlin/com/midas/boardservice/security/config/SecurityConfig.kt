@@ -1,34 +1,41 @@
-package com.midas.boardservice.config
+package com.midas.boardservice.security.config
 
+import com.midas.boardservice.security.component.JwtAuthenticationEntryPoint
 import com.midas.boardservice.common.domain.constant.ResultStatus
 import com.midas.boardservice.member.dto.MemberDto
-import com.midas.boardservice.member.dto.security.BoardPrincipal
-import com.midas.boardservice.member.dto.security.KakaoOAuth2Response
-import com.midas.boardservice.member.dto.security.OAuth2BoardPrincipal
+import com.midas.boardservice.security.dto.BoardPrincipal
+import com.midas.boardservice.security.dto.KakaoOAuth2Response
+import com.midas.boardservice.security.dto.OAuth2BoardPrincipal
 import com.midas.boardservice.exception.CustomException
+import com.midas.boardservice.security.exception.JwtAccessDeniedHandler
 import com.midas.boardservice.member.service.MemberService
+import com.midas.boardservice.security.component.JwtTokenProvider
+import com.midas.boardservice.security.filter.JwtTokenFilter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.Customizer.withDefaults
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import java.util.*
 
 @Configuration
-class SecurityConfig {
+class SecurityConfig(
+    private val jwtTokenProvider: JwtTokenProvider,
+    private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
+    private val jwtAccessDeniedHandler: JwtAccessDeniedHandler
+) {
 
     @Bean
     fun securityChain(
@@ -37,6 +44,9 @@ class SecurityConfig {
     ): SecurityFilterChain {
         return httpSecurity
             .csrf { it.disable() }
+            .exceptionHandling {
+                it.authenticationEntryPoint(jwtAuthenticationEntryPoint).accessDeniedHandler(jwtAccessDeniedHandler)
+            }
             .authorizeHttpRequests {
                 it.requestMatchers(
                     PathRequest.toStaticResources().atCommonLocations()
@@ -45,6 +55,7 @@ class SecurityConfig {
                     .anyRequest().authenticated()
             }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .addFilterBefore(JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter::class.java)
             .build()
     }
 
