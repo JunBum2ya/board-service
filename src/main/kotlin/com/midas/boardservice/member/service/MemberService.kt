@@ -1,6 +1,6 @@
 package com.midas.boardservice.member.service
 
-import com.midas.boardservice.common.component.JwtTokenProvider
+import com.midas.boardservice.security.component.JwtTokenProvider
 import com.midas.boardservice.common.domain.constant.ResultStatus
 import com.midas.boardservice.exception.CustomException
 import com.midas.boardservice.mail.dto.MailRequest
@@ -8,7 +8,7 @@ import com.midas.boardservice.mail.service.MailService
 import com.midas.boardservice.member.domain.Member
 import com.midas.boardservice.member.dto.MemberAuthenticationDto
 import com.midas.boardservice.member.dto.MemberDto
-import com.midas.boardservice.member.dto.security.JwtBoardPrincipal
+import com.midas.boardservice.security.dto.JwtBoardPrincipal
 import com.midas.boardservice.member.repository.MemberRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -61,7 +61,7 @@ class MemberService(
             content = "${member.getNickname()}님! 진심으로 환영합니다.",
             recipients = listOf(member.getEmail())
         )
-        //mailService.sendMessage(mailRequest)
+        mailService.sendMessage(mailRequest)
 
         return authentication
     }

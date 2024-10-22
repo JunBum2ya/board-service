@@ -1,6 +1,6 @@
 package com.midas.boardservice.member.service
 
-import com.midas.boardservice.common.component.JwtTokenProvider
+import com.midas.boardservice.security.component.JwtTokenProvider
 import com.midas.boardservice.mail.service.MailService
 import com.midas.boardservice.member.domain.Member
 import com.midas.boardservice.member.dto.MemberDto

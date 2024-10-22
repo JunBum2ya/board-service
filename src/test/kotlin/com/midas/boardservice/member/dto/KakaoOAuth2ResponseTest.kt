@@ -1,12 +1,9 @@
 package com.midas.boardservice.member.dto
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.midas.boardservice.member.dto.security.KakaoOAuth2Response
+import com.midas.boardservice.security.dto.KakaoOAuth2Response
 import io.kotest.core.spec.style.StringSpec
-import io.kotest.matchers.maps.shouldContain
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldHave
-import io.kotest.property.arbitrary.TypeReference
 
 class KakaoOAuth2ResponseTest : StringSpec({
     val mapper = ObjectMapper()

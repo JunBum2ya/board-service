@@ -1,7 +1,7 @@
-package com.midas.boardservice.common.component
+package com.midas.boardservice.security.component
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.midas.boardservice.member.dto.security.JwtBoardPrincipal
+import com.midas.boardservice.security.dto.JwtBoardPrincipal
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys

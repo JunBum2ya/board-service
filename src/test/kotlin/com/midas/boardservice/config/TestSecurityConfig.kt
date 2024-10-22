@@ -1,7 +1,7 @@
 package com.midas.boardservice.config
 
 import com.midas.boardservice.member.service.MemberService
-import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties
+import com.midas.boardservice.security.config.SecurityConfig
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository

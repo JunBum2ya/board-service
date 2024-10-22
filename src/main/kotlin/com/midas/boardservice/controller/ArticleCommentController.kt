@@ -1,11 +1,10 @@
 package com.midas.boardservice.controller
 
 import com.midas.boardservice.dto.request.ArticleCommentRequest
-import com.midas.boardservice.member.dto.security.BoardPrincipal
+import com.midas.boardservice.security.dto.BoardPrincipal
 import com.midas.boardservice.service.ArticleCommentService
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotNull
-import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PathVariable

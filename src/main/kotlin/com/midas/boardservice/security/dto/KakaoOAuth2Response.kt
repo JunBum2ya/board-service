@@ -1,4 +1,4 @@
-package com.midas.boardservice.member.dto.security
+package com.midas.boardservice.security.dto
 
 import java.time.LocalDateTime
 import java.time.ZoneId
