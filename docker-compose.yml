@@ -35,6 +35,7 @@ services:
       AZURE_EMAIL_SENDER: ${AZURE_EMAIL_SENDER}
       AZURE_EMAIL_ACCESS_KEY: ${AZURE_EMAIL_ACCESS_KEY}
       JWT_SECRET: ${JWT_SECRET}
+      SSL_KEY: ${SSL_KEY}
     ports:
       - "443:8443"
       - "80:8080"

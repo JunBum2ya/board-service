@@ -61,7 +61,7 @@ class MemberService(
             content = "${member.getNickname()}님! 진심으로 환영합니다.",
             recipients = listOf(member.getEmail())
         )
-        mailService.sendMessage(mailRequest)
+        //mailService.sendMessage(mailRequest)
 
         return authentication
     }
