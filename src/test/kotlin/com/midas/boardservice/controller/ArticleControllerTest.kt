@@ -1,15 +1,16 @@
 package com.midas.boardservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.midas.boardservice.domain.Article
+import com.midas.boardservice.article.controller.ArticleController
+import com.midas.boardservice.article.domain.Article
 import com.midas.boardservice.member.domain.Member
 import com.midas.boardservice.domain.contant.FormStatus
-import com.midas.boardservice.domain.contant.SearchType
-import com.midas.boardservice.dto.ArticleDto
-import com.midas.boardservice.dto.ArticleWithCommentsDto
+import com.midas.boardservice.article.domain.constant.SearchType
+import com.midas.boardservice.article.dto.ArticleDto
+import com.midas.boardservice.article.dto.ArticleWithCommentsDto
 import com.midas.boardservice.member.dto.MemberDto
-import com.midas.boardservice.dto.request.ArticleRequest
-import com.midas.boardservice.service.ArticleService
+import com.midas.boardservice.article.dto.request.ArticleRequest
+import com.midas.boardservice.article.service.ArticleService
 import com.midas.boardservice.common.service.PaginationService
 import com.midas.boardservice.util.FormDataEncoder
 import com.midas.boardservice.util.TestAuthenticationPrincipal
@@ -131,7 +132,7 @@ class ArticleControllerTest : DescribeSpec({
                 .andExpect(model().attributeExists("article"))
                 .andExpect(model().attributeExists("articleComments"))
                 .andExpect(model().attribute("totalCount",totalCount))
-                .andExpect(model().attribute("searchTypeHashtag",SearchType.HASHTAG))
+                .andExpect(model().attribute("searchTypeHashtag", SearchType.HASHTAG))
             verify { articleService.getArticleWithComments(any(Long::class)) }
             verify { articleService.getArticleCount() }
         }

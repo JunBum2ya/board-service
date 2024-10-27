@@ -1,9 +1,10 @@
 package com.midas.boardservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.midas.boardservice.dto.ArticleCommentDto
+import com.midas.boardservice.article.controller.ArticleCommentController
+import com.midas.boardservice.article.dto.ArticleCommentDto
 import com.midas.boardservice.member.dto.MemberDto
-import com.midas.boardservice.service.ArticleCommentService
+import com.midas.boardservice.article.service.ArticleCommentService
 import com.midas.boardservice.util.FormDataEncoder
 import com.midas.boardservice.util.TestAuthenticationPrincipal
 import io.kotest.core.spec.style.DescribeSpec

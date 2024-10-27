@@ -1,13 +1,13 @@
 package com.midas.boardservice.service
 
-import com.midas.boardservice.domain.Hashtag
-import com.midas.boardservice.repository.HashtagRepository
+import com.midas.boardservice.article.domain.Hashtag
+import com.midas.boardservice.article.repository.HashtagRepository
+import com.midas.boardservice.article.service.HashtagService
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.data.forAll
 import io.kotest.data.row
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldHaveSize
-import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
