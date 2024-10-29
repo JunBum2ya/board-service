@@ -8,4 +8,8 @@ data class HashtagDto(val id: Long? = null, val hashtagName: String) {
             return HashtagDto(id = hashtag.getId(), hashtagName = hashtag.hashtagName)
         }
     }
+
+    fun toEntity(): Hashtag {
+        return Hashtag(hashtagName = hashtagName)
+    }
 }

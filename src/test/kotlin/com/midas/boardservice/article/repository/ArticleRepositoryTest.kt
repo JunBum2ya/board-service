@@ -1,11 +1,9 @@
-package com.midas.boardservice.repository
+package com.midas.boardservice.article.repository
 
 import com.midas.boardservice.config.TestJpaConfig
 import com.midas.boardservice.article.domain.Article
 import com.midas.boardservice.article.domain.ArticleComment
 import com.midas.boardservice.article.domain.Hashtag
-import com.midas.boardservice.article.repository.ArticleCommentRepository
-import com.midas.boardservice.article.repository.ArticleRepository
 import com.midas.boardservice.member.domain.Member
 import com.midas.boardservice.article.dto.param.ArticleSearchParam
 import com.midas.boardservice.member.repository.MemberRepository

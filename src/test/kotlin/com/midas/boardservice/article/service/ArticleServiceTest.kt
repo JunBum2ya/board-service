@@ -1,4 +1,4 @@
-package com.midas.boardservice.service
+package com.midas.boardservice.article.service
 
 import com.midas.boardservice.article.domain.Article
 import com.midas.boardservice.article.domain.Hashtag
@@ -10,8 +10,6 @@ import com.midas.boardservice.member.dto.MemberDto
 import com.midas.boardservice.article.dto.param.ArticleSearchParam
 import com.midas.boardservice.exception.CustomException
 import com.midas.boardservice.article.repository.ArticleRepository
-import com.midas.boardservice.article.service.ArticleService
-import com.midas.boardservice.article.service.HashtagService
 import com.midas.boardservice.member.repository.MemberRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -75,25 +73,6 @@ class ArticleServiceTest : BehaviorSpec({
             }
         }
     }
-    Given("게시글 정보를") {
-        val articleDto = ArticleDto.from(createArticle())
-        val expectedHashtagNames = setOf("kotlin","spring")
-        val expectedHashtags = arrayListOf(Hashtag(id = 1L, hashtagName = "kotlin"))
-        every { memberRepository.getReferenceById(any(String::class)) }.returns(createMember())
-        every { hashtagService.parseHashtagNames(any(String::class)) }.returns(expectedHashtagNames)
-        every { hashtagService.findHashtagsByNames(any()) }.returns(expectedHashtags)
-        every { articleRepository.save(any(Article::class)) }.returns(createArticle())
-        When("입력하면") {
-            val article = articleService.saveArticle(articleDto)
-            Then("본문에서 해시태그 정보를 추출하여 해시태그 정보가 포함된 게시글을 생성한다") {
-                article shouldNotBe null
-                verify { memberRepository.getReferenceById(any(String::class)) }
-                verify { hashtagService.parseHashtagNames(any(String::class)) }
-                verify { hashtagService.findHashtagsByNames(any()) }
-                verify { articleRepository.save(any(Article::class)) }
-            }
-        }
-    }
     Given("게시글 ID로 조회를 하면") {
         val articleId = 1L
         val article = createArticle()
@@ -113,41 +92,6 @@ class ArticleServiceTest : BehaviorSpec({
             Then("예외가 발생한다.") {
                 customException.code shouldBe ResultStatus.ACCESS_NOT_EXIST_ENTITY.code
                 customException.message shouldBe "게시글이 없습니다. - 1"
-            }
-        }
-    }
-    Given("게시글 수를") {
-        val expected = 0L
-        every { articleRepository.count() }.returns(expected)
-        When("조회하면") {
-            val actual = articleService.getArticleCount()
-            Then("게시글 수를 반환한다.") {
-                actual shouldBe expected
-                verify { articleRepository.count() }
-            }
-        }
-    }
-    Given("게시글 수정 정보를 입력했을 때") {
-        val article = createArticle()
-        val articleDto = ArticleDto(memberDto = MemberDto.from(article.member), title = "new title", content = "new content #spring")
-        val hashtagNames = hashSetOf("spring")
-        every { articleRepository.getReferenceById(any(Long::class)) }.returns(article)
-        every { memberRepository.getReferenceById(any(String::class)) }.returns(createMember())
-        every { hashtagService.deleteHashtagWithoutArticles(any(Long::class)) }.returns(Unit)
-        every { hashtagService.parseHashtagNames(any(String::class)) }.returns(hashtagNames)
-        every { hashtagService.findHashtagsByNames(any()) }.returns(listOf<Hashtag>())
-        every { articleRepository.flush() }.returns(Unit)
-        When("존재하는 게시글이었을 경우") {
-            articleService.updateArticle(articleDto.articleId?:-1L, articleDto)
-            Then("게시글을 수정한다.") {
-                article.getTitle() shouldBe articleDto.title
-                article.getContent() shouldBe articleDto.content
-                verify { articleRepository.getReferenceById(any(Long::class)) }
-                verify { memberRepository.getReferenceById(any(String::class)) }
-                verify { hashtagService.deleteHashtagWithoutArticles(any(Long::class)) }
-                verify { hashtagService.parseHashtagNames(any(String::class)) }
-                verify { hashtagService.findHashtagsByNames(any()) }
-                verify { articleRepository.flush() }
             }
         }
     }

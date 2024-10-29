@@ -5,6 +5,7 @@ import com.midas.boardservice.common.domain.constant.ResultStatus
 import com.midas.boardservice.exception.CustomException
 import com.midas.boardservice.article.repository.HashtagRepository
 import jakarta.persistence.EntityNotFoundException
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.regex.Pattern
@@ -21,34 +22,13 @@ class HashtagService(private val hashtagRepository: HashtagRepository) {
     }
 
     /**
-     * 해시태그 파싱
-     */
-    fun parseHashtagNames(content: String?): Set<String> {
-        if(content == null) {
-            return setOf()
-        }
-        val pattern = Pattern.compile("#[\\w가-힣]+")
-        val matcher = pattern.matcher(content)
-        val result = mutableSetOf<String>()
-
-        while(matcher.find()) {
-            result.add(matcher.group().replace("#",""))
-        }
-
-        return result
-    }
-
-    /**
      * 게시글이 없는 해시태그 삭제
      */
     fun deleteHashtagWithoutArticles(hashtagId: Long) {
-        try {
-            val hashtag = hashtagRepository.getReferenceById(hashtagId)
-            if(hashtag.articles.isEmpty()) {
-                hashtagRepository.delete(hashtag)
-            }
-        }catch (e: EntityNotFoundException) {
-            throw CustomException(ResultStatus.ACCESS_NOT_EXIST_ENTITY)
+        val hashtag = hashtagRepository.findByIdOrNull(hashtagId)
+            ?: throw CustomException(ResultStatus.ACCESS_NOT_EXIST_ENTITY)
+        if(hashtag.articles.isEmpty()) {
+            hashtagRepository.delete(hashtag)
         }
     }
 }

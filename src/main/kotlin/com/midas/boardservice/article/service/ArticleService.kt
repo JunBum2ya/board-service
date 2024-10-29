@@ -5,6 +5,7 @@ import com.midas.boardservice.common.domain.constant.ResultStatus
 import com.midas.boardservice.article.domain.constant.SearchType
 import com.midas.boardservice.article.dto.ArticleDto
 import com.midas.boardservice.article.dto.ArticleWithCommentsDto
+import com.midas.boardservice.article.dto.HashtagDto
 import com.midas.boardservice.article.dto.param.ArticleSearchParam
 import com.midas.boardservice.exception.CustomException
 import com.midas.boardservice.article.repository.ArticleRepository
@@ -71,11 +72,6 @@ class ArticleService(
             ?: throw CustomException(ResultStatus.ACCESS_NOT_EXIST_ENTITY, "게시글이 없습니다. - $articleId")
     }
 
-    @Transactional(readOnly = true)
-    fun getArticleCount(): Long {
-        return articleRepository.count()
-    }
-
     /**
      * 게시글 저장
      */
@@ -83,8 +79,8 @@ class ArticleService(
     fun saveArticle(articleDto: ArticleDto): ArticleDto {
         try {
             val member = memberRepository.getReferenceById(articleDto.memberDto.id)
-            val hashtags = renewHashtagsFromContent(articleDto.content)
             val article = articleDto.toEntity(member)
+            val hashtags = hashtagService.findHashtagsByNames(articleDto.hashtags.map { it.hashtagName }.toSet()) //해시태그 조회
             article.addHashtags(hashtags)
             return ArticleDto.from(articleRepository.save(article))
         } catch (e: EntityNotFoundException) {
@@ -107,9 +103,6 @@ class ArticleService(
 
                 hashtagIds.forEach { hashtagService.deleteHashtagWithoutArticles(it) }
 
-                val hashtags = renewHashtagsFromContent(articleData.content)
-                article.addHashtags(hashtags)
-
             }else {
                 logger.warn("게시글 업데이트 실패. 권한이 없습니다. - {}", articleId)
                 throw CustomException(ResultStatus.UNAUTHENTICATED_USER)
@@ -131,16 +124,4 @@ class ArticleService(
         hashtagIds.forEach { hashtagService.deleteHashtagWithoutArticles(it) }
     }
 
-    /**
-     * 해시태그 갱신
-     */
-    fun renewHashtagsFromContent(content: String): List<Hashtag> {
-        val hashtagNamesInContent = hashtagService.parseHashtagNames(content)
-        val hashtags = hashtagService.findHashtagsByNames(hashtagNamesInContent).toMutableList()
-        val existingHashtagNames = hashtags.map { it.hashtagName }.toSet()
-        hashtagNamesInContent.filter { !existingHashtagNames.contains(it) }.forEach {
-            hashtags.add(Hashtag(hashtagName = it))
-        }
-        return hashtags
-    }
 }
