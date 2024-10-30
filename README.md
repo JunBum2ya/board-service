@@ -7,3 +7,6 @@
 ## https 적용
 ## AZURE AD 로그인 기능 구현
 ## AZURE 이메일 전송 기능 구현
+
+### todo
+1. frontend를 react로 바꾸는 과정에서 코드 리팩토링 필요
