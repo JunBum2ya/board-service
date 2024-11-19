@@ -7,6 +7,7 @@
 ## https 적용
 인증서
 ## AZURE AD 로그인 기능 구현
+### AZURE logout 구현
 ## AZURE 이메일 전송 기능 구현
 
 ### todo
