@@ -9,7 +9,7 @@ data class ArticleResponse(
     val id: Long,
     val title: String,
     val content: String,
-    val hashtags: Set<String>,
+    val hashtags: List<String>,
     val createdAt: LocalDateTime?,
     val email: String,
     val nickname: String
@@ -21,7 +21,7 @@ data class ArticleResponse(
                 id = articleDto.articleId ?: throw CustomException(ResultStatus.USE_NOT_PERSIST_ENTITY),
                 title = articleDto.title,
                 content = articleDto.content,
-                hashtags = articleDto.hashtags.map { it.hashtagName }.toSet(),
+                hashtags = articleDto.hashtags.map { it.hashtagName }.toMutableList(),
                 createdAt = articleDto.createdAt,
                 email = articleDto.memberDto.email,
                 nickname = articleDto.memberDto.nickname
