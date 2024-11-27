@@ -79,6 +79,11 @@ spring:
   sql:
     init:
       mode: never
+mail:
+  azure:
+    app-name: test
+    sender: test
+    access-key: 1gagate0gasodiguidsopghsdogha;osdghiisdghasodgosdghodsgh
 
 ---
 

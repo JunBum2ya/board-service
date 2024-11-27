@@ -3,6 +3,7 @@ package com.midas.boardservice.article.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.midas.boardservice.article.dto.ArticleDto
 import com.midas.boardservice.article.dto.HashtagDto
+import com.midas.boardservice.article.dto.request.ArticleRequest
 import com.midas.boardservice.article.service.ArticleService
 import com.midas.boardservice.security.TestSecurityConfig
 import com.midas.boardservice.member.dto.MemberDto
@@ -36,14 +37,16 @@ class ArticleControllerTest(
                 articleId = 1L,
                 memberDto = memberDto,
                 title = "title",
-                content = "content"
+                content = "content",
+                hashtags = setOf(HashtagDto(hashtagName = "test"))
             )
+            val request = ArticleRequest(title = "title", content = "content", hashtags = listOf("test"))
             it("200 OK") {
                 every { articleService.saveArticle(any(ArticleDto::class)) }.returns(articleDto)
                 mockMvc.perform(
                     post("/api/articles")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(articleDto))
+                        .content(objectMapper.writeValueAsString(request))
                         .header("authorization", "Bearer abc")
                 )
                     .andExpect { status().isOk }

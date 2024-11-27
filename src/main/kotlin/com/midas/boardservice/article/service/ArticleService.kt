@@ -80,7 +80,8 @@ class ArticleService(
         try {
             val member = memberRepository.getReferenceById(articleDto.memberDto.id)
             val article = articleDto.toEntity(member)
-            val hashtags = hashtagService.findHashtagsByNames(articleDto.hashtags.map { it.hashtagName }.toSet()) //해시태그 조회
+            val hashtags =
+                hashtagService.findHashtagsByNames(articleDto.hashtags.map { it.hashtagName }.toSet()) //해시태그 조회
             article.addHashtags(hashtags)
             return ArticleDto.from(articleRepository.save(article))
         } catch (e: EntityNotFoundException) {
@@ -92,31 +93,27 @@ class ArticleService(
      * 게시글 수정
      */
     @Throws(CustomException::class)
-    fun updateArticle(articleId: Long, articleData: ArticleDto) {
-        try {
-            val article = articleRepository.getReferenceById(articleId)
-            if(article.member.getId() == articleData.memberDto.id) {
-                article.update(title = articleData.title, content = articleData.content)
-                val hashtagIds = article.hashtags.mapNotNull { it.getId() }
-                article.clearHashtags()
-                articleRepository.flush()
-
-                hashtagIds.forEach { hashtagService.deleteHashtagWithoutArticles(it) }
-
-            }else {
-                logger.warn("게시글 업데이트 실패. 권한이 없습니다. - {}", articleId)
-                throw CustomException(ResultStatus.UNAUTHENTICATED_USER)
-            }
-        } catch (e: EntityNotFoundException) {
-            logger.warn("게시글 업데이트 실패. 게시글을 수정하는데 필요한 정보를 찾을 수 없습니다 - {}", e.localizedMessage)
-            throw CustomException(ResultStatus.ACCESS_NOT_EXIST_ENTITY, "게시글이 없습니다. - $articleId")
+    fun updateArticle(articleId: Long, articleData: ArticleDto): ArticleDto {
+        val article = articleRepository.findByIdOrNull(articleId)
+            ?: throw CustomException(ResultStatus.ACCESS_NOT_EXIST_ENTITY)
+        if (article.member.getId() != articleData.memberDto.id) {
+            logger.warn("게시글 업데이트 실패. 권한이 없습니다. - {}", articleId)
+            throw CustomException(ResultStatus.UNAUTHENTICATED_USER)
         }
+        article.update(title = articleData.title, content = articleData.content)
+        val hashtagIds = article.hashtags.mapNotNull { it.getId() }
+        article.clearHashtags()
+        articleRepository.flush()
+
+        hashtagIds.forEach { hashtagService.deleteHashtagWithoutArticles(it) }
+
+        return ArticleDto.from(article)
     }
 
     /**
      * 게시글 삭제
      */
-    fun deleteArticle(articleId: Long, memberId : String) {
+    fun deleteArticle(articleId: Long, memberId: String) {
         val article = articleRepository.getReferenceById(articleId)
         val hashtagIds = article.hashtags.mapNotNull { it.getId() }.toList()
         articleRepository.deleteArticle(articleId, memberId)

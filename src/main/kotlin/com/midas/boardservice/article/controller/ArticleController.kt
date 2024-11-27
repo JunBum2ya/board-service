@@ -44,4 +44,14 @@ class ArticleController(private val articleService: ArticleService) {
         return ResponseEntity.ok(CommonResponse.of(ArticleResponse.from(articleDto)))
     }
 
+    @PutMapping("/{id}")
+    fun updateArticle(
+        @PathVariable id: Long,
+        @Valid @RequestBody articleRequest: ArticleRequest,
+        @AuthenticationPrincipal boardPrincipal: BoardPrincipal
+    ): ResponseEntity<CommonResponse<ArticleResponse>> {
+        val articleDto = articleService.updateArticle(id,articleRequest.toDto(boardPrincipal.toDto()))
+        return ResponseEntity.ok(CommonResponse.of(ArticleResponse.from(articleDto)))
+    }
+
 }
