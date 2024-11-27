@@ -12,4 +12,3 @@
 
 ### todo
 1. frontend를 react로 바꾸는 과정에서 코드 리팩토링 필요
-2. test 코드 구현중
