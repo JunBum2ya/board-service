@@ -5,7 +5,7 @@
 ## 인증 절차를 jwt로 변경 필요
 1. jwt 토큰에 데이터 저장
 ## https 적용
-인증서
+인증서 적용
 ## AZURE AD 로그인 기능 구현
 ### AZURE logout 구현 azure 연동 필요
 ## AZURE 이메일 전송 기능 구현
